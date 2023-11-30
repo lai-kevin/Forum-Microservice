@@ -5,17 +5,36 @@ const Users = require("../models/users");
 
 // Create a user and store in database
 users.post("/register", async (req, res) => {
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(req.body.password, salt);
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(req.body.password, salt);
 
-    const newUser = new Users({
-        username: req.body.username,
-        email: req.body.email,
-        passwordHash: passwordHash,
-    });
-    const savedUser = await newUser.save();
-    console.log(savedUser);
-    res.status(200).json(savedUser);
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(req.body.email)) {
+            res.status(400).json({ error: "Invalid email format" });
+            return;
+        }
+        // The typed password should not contain the username or email.
+        if (req.body.password.includes(req.body.username) || req.body.password.includes(req.body.email)) {
+            res.status(400).json({ error: "Password should not contain username or email" });
+            return;
+        }
+        const newUser = new Users({
+            username: req.body.username,
+            email: req.body.email,
+            passwordHash: passwordHash,
+        });
+        const savedUser = await newUser.save();
+        console.log(savedUser);
+        res.status(200).json(savedUser);
+    } catch (error) {
+        console.error(error);
+        if(error.keyValue?.email){
+            res.status(400).json({ error: "Email already exists" });
+            return;
+        }
+        res.status(500).json({ error: "Internal server error", message: error });
+    }
 });
 
 // Login a user
