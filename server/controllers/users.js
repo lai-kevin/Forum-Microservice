@@ -53,6 +53,15 @@ users.post("/login", async (req, res) => {
     }
 });
 
+users.post("/logout", async (req, res) => {
+    if(!req.session.user){
+        res.status(400).json({ error: "Not logged in" });
+        return;
+    }
+    req.session.destroy();
+    res.status(200).json({ message: "Logged out" });
+});
+
 // Get user from database.
 users.get("/", async (req, res) => {
   res.status(500).json({ error: "Not implemented" });
