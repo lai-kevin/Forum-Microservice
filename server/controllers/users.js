@@ -18,6 +18,22 @@ users.post("/register", async (req, res) => {
     res.json(savedUser);
 });
 
+// Login a user
+users.post("/login", async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    const user = (await Users.find({ email: email }))[0];
+    console.log("User: ", user);
+    const verdict = await bcrypt.compare(password, user.passwordHash);
+    console.log("Verdict: ", verdict);
+    if (verdict) {
+        req.session.user = user;
+        res.json({ user: user });
+    } else {
+        res.json({ user: null });
+    }
+});
+
 // Get user from database.
 users.get("/", async (req, res) => {
   if (req.session.user){
