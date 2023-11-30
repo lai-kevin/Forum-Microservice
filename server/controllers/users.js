@@ -15,7 +15,7 @@ users.post("/register", async (req, res) => {
     });
     const savedUser = await newUser.save();
     console.log(savedUser);
-    res.json(savedUser);
+    res.status(200).json(savedUser);
 });
 
 // Login a user
@@ -28,29 +28,25 @@ users.post("/login", async (req, res) => {
     console.log("Verdict: ", verdict);
     if (verdict) {
         req.session.user = user;
-        res.json({ user: user });
+        res.status(200).json({ user: user });
     } else {
-        res.json({ user: null });
+        res.status(401).json({ error: "Invalid credentials"});
     }
 });
 
 // Get user from database.
 users.get("/", async (req, res) => {
-  if (req.session.user){
-    res.json({user: req.session.user})
-  } else {
-    res.json({user: null})
-  }
+  res.status(500).json({ error: "Not implemented" });
 });
 
 // Update an answer
 users.patch("/", async (req, res) => {
-  
+    res.status(500).json({ error: "Not implemented" });
 });
 
 // Delete an answer
 users.delete("/", async (req, res) => {
-  
+    res.status(500).json({ error: "Not implemented" });
 });
 
 
