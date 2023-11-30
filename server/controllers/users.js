@@ -1,15 +1,30 @@
 const users = require("express").Router();
-const Answer = require("../models/answers");
-const Question = require("../models/questions");
+const bodyParser = require("body-parser");
+const bcrypt = require("bcrypt");
+const Users = require("../models/users");
 
-// Create an answer and store in database
-users.post("/", async (req, res) => {
-  
+// Create a user and store in database
+users.post("/register", async (req, res) => {
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(req.body.password, salt);
+
+    const newUser = new Users({
+        username: req.body.username,
+        email: req.body.email,
+        passwordHash: passwordHash,
+    });
+    const savedUser = await newUser.save();
+    console.log(savedUser);
+    res.json(savedUser);
 });
 
-// Get answer(s) database.
+// Get user from database.
 users.get("/", async (req, res) => {
-  
+  if (req.session.user){
+    res.json({user: req.session.user})
+  } else {
+    res.json({user: null})
+  }
 });
 
 // Update an answer
