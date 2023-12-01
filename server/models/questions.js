@@ -32,15 +32,26 @@ const questionSchema = new mongoose.Schema({
     }],
     default: [],
   },
+  comments: {
+    type: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    }],
+    default: [],
+  },
   asked_by: {
     type: String,
     default: "Anonymous",
   },
-  ask_date_time: {
+  posted_time: {
     type: Date,
-    default: Date.now()
+    default: Date.now,
   },
   views: {
+    type: Number,
+    default: 0,
+  },
+  votes: {
     type: Number,
     default: 0,
   },

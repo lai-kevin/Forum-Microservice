@@ -7,6 +7,15 @@ const tagSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  created_by: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 tagSchema.virtual("url").get(function() {

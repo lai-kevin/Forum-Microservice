@@ -6,13 +6,18 @@ const answerSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  votes: {
+    type: Number,
+    default: 0,
+  },
   ans_by: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
-  ans_date_time: {
+  posted_time: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
 });
 
