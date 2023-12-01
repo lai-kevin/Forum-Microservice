@@ -14,7 +14,7 @@ commentsRouter.post("/", async (req, res) => {
     const question_id = req.body.question_id;
     const newComment = new Comment({
       text: req.body.text,
-      posted_by: req.body.comment_by,
+      posted_by: req.session.user._id,
     });
     const savedComment = await newComment.save();
 
@@ -48,9 +48,68 @@ commentsRouter.post("/", async (req, res) => {
 commentsRouter.get("/", async (req, res) => {});
 
 // Update a comment
-commentsRouter.patch("/", async (req, res) => {});
+commentsRouter.patch("/", async (req, res) => {
+  if (!req.session.user){
+    res.status(401).json({ message: "You must be logged in to comment" });
+    return;
+  }
+  if (req.session.user._id !== req.body.posted_by){
+    res.status(401).json({ message: "You can only edit your own comment" });
+    return;
+  }
+
+  try {
+    const comment_id = req.body.comment_id;
+    const text = req.body.text;
+    const update = await Comment.findOneAndUpdate(
+      { _id: comment_id },
+      { text: text },
+      { new: true }
+    );
+    if (update) res.status(200).json({ message: "Successfully updated comment", comment: update });
+    else res.status(400).json({ message: "Error updating comment" });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating comment", error: error.message });
+  }
+});
 
 // Delete a comment
-commentsRouter.delete("/", async (req, res) => {});
+commentsRouter.delete("/", async (req, res) => {
+  if(!req.session.user || req.session.user._id !== req.body.posted_by){
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+  try {
+    const comment_id = req.body.comment_id;
+    const answer_id = req.body.answer_id;
+    const question_id = req.body.question_id;
+    const update = await Comment.deleteOne({ _id: comment_id });
+    if (update.deletedCount === 1) {
+      // Pull the comment from its answer if answer is defined
+      if (answer_id) {
+        const update = await Answer.findOneAndUpdate(
+          { _id: answer_id },
+          { $pull: { comments: comment_id } },
+          { new: true }
+        );
+        if (update) res.status(200).json({ message: "Successfully deleted comment", comment: update });
+        return;
+      }
+      // Pull the comment from its question if question is defined
+      if (question_id) {
+        const update = await Question.findOneAndUpdate(
+          { _id: question_id },
+          { $pull: { comments: comment_id } },
+          { new: true }
+        );
+        if (update) res.status(200).json({ message: "Successfully deleted comment", comment: update });
+        return;
+      }
+    }
+    res.status(400).json({ message: "Error deleting comment" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting comment", error: error.message });
+  }
+});
 
 module.exports = commentsRouter;
