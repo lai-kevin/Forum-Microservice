@@ -92,6 +92,24 @@ questionsRouter2.patch("/", async (req, res) => {
 });
 
 // Delete a question
-questionsRouter2.delete("/", async (req, res) => {});
+questionsRouter2.delete("/", async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    const { question_id } = req.params;
+    const question = await Question.findOneAndDelete({
+      _id: question_id,
+      asked_by: req.session.user._id,
+    });
+    if (!question) {
+      return res.status(404).json({ error: "Question not found" });
+    }
+    return res.status(200).json(question);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 module.exports = questionsRouter2;
