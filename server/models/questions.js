@@ -40,8 +40,9 @@ const questionSchema = new mongoose.Schema({
     default: [],
   },
   asked_by: {
-    type: String,
-    default: "Anonymous",
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
   },
   posted_time: {
     type: Date,
