@@ -3,11 +3,11 @@ const Question = require("../models/questions");
 
 // Create an question and store in database
 questionsRouter2.post("/", async (req, res) => {
-  if (!req.session.user){
+  if (!req.session.user) {
     return res.status(401).json({ error: "Unauthorized" });
   }
   try {
-    const { title, question_text, tags} = req.body;
+    const { title, question_text, tags } = req.body;
     const question = new Question({
       title: title,
       text: question_text,
@@ -15,7 +15,7 @@ questionsRouter2.post("/", async (req, res) => {
       asked_by: req.session.user._id,
     });
     const savedQuestion = await question.save();
-    if(!savedQuestion){
+    if (!savedQuestion) {
       return res.status(400).json({ error: "Could not save question" });
     }
     return res.status(201).json(savedQuestion);
@@ -47,7 +47,10 @@ questionsRouter2.get("/", async (req, res) => {
 
     // If tag is present, return questions with that tag
     if (tag) {
-      const questions = await Question.paginate({ tags: { $in: [tag] } }, options);
+      const questions = await Question.paginate(
+        { tags: { $in: [tag] } },
+        options
+      );
       return res.status(200).json(questions);
     }
 
@@ -62,12 +65,33 @@ questionsRouter2.get("/", async (req, res) => {
 
 // Update a question
 questionsRouter2.patch("/", async (req, res) => {
-  
+  if (!req.session.user) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  const { question_id, title, text, tags } = req.body;
+
+  const updateFields = {};
+  if (title) {
+    updateFields.title = title;
+  }
+  if (text) {
+    updateFields.text = text;
+  }
+  if (tags) {
+    updateFields.tags = tags;
+  }
+  const question = await Question.findOneAndUpdate(
+    { _id: question_id, asked_by: req.session.user._id },
+    updateFields,
+    { new: true }
+  );
+  if (!question) {
+    return res.status(404).json({ error: "Question not found" });
+  }
+  return res.status(200).json(question);
 });
 
 // Delete a question
-questionsRouter2.delete("/", async (req, res) => {
-  
-});
+questionsRouter2.delete("/", async (req, res) => {});
 
 module.exports = questionsRouter2;
