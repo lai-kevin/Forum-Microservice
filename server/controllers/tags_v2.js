@@ -12,11 +12,12 @@ tagsRouter2.post("/", async (req, res) => {
   try {
     const newTag = new Tag({
       name: req.body.name,
-      created_by: req.session.user.username,
+      created_by: req.session.user._id,
     });
     const savedTag = await newTag.save();
     res.status(200).json({ message: "Successfully saved tag", tag: savedTag });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Failed to save tag to database" });
   }
 });
@@ -46,7 +47,8 @@ tagsRouter2.delete("/", async (req, res) => {
 
   try {
     // If the user created the tag, delete it
-    const deletedTag = await Tag.deleteOne({ name: req.body.name, created_by: req.session.user.username });
+    const deletedTag = await Tag.deleteOne({ name: req.query.name, created_by: req.session.user._id });
+    console.log(deletedTag);
     if (deletedTag.deletedCount === 1) {
       res.status(200).json({ message: "Successfully deleted tag" });
     } else {
