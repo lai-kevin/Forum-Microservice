@@ -15,6 +15,11 @@ const answerSchema = mongoose.Schema({
     ref: "User",
     required: true,
   },
+  comments: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Comment",
+    default: [],
+  },
   posted_time: {
     type: Date,
     default: Date.now,
