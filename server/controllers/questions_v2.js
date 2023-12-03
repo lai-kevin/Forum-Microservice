@@ -97,11 +97,12 @@ questionsRouter2.delete("/", async (req, res) => {
     if (!req.session.user) {
       return res.status(401).json({ error: "Unauthorized" });
     }
-    const { question_id } = req.params;
+    const { question_id } = req.query;
     const question = await Question.findOneAndDelete({
       _id: question_id,
       asked_by: req.session.user._id,
     });
+    console.log(req.session.user._id)
     if (!question) {
       return res.status(404).json({ error: "Question not found" });
     }
