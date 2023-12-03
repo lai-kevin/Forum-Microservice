@@ -7,17 +7,15 @@ import FakeStackOverflow from './components/fakestackoverflow.js';
 import LoginPage from './components/pages/login-page.jsx';
 import AccountCreationPage from './components/pages/account-creation.jsx';
 import UserProfilePage from './components/pages/user-profile-page.jsx';
-import React, { useContext, createContext } from 'react';
+import React, { useContext, createContext, useState } from 'react';
 
 // Create a new context for user information
-const UserContext = createContext({
-  name: '',
-  email: '',
-});
+const UserContext = createContext();
 
 function App() {
+  const [user, setUser] = useState({username: "", email: ""});
   return (
-    <UserContext.Provider value={{name: "", email: ""}}>
+    <UserContext.Provider value={[user, setUser]}>
       <Router>
         <section className="fakeso">
           <Routes>

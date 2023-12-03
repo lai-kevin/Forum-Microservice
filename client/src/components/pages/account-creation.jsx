@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Card, Box, Typography, TextField, Button } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
+import { Card, Box, Typography, TextField, Button, Alert } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import axios from "axios";
 import Image from "../../images/collage-with-statue-meadow.jpg";
@@ -11,8 +11,13 @@ const AccountCreationPage = () => {
   const [usernameValid, setUsernameValid] = useState(true);
   const [passwordValid, setPasswordValid] = useState(true);
   const [emailValid, setEmailValid] = useState(true);
+  const [emailFormatValid, setEmailFormatValid] = useState(true);
 
   const handleCreateAccount = () => {
+    setUsernameValid(true);
+    setPasswordValid(true);
+    setEmailValid(true);
+    setEmailFormatValid(true);
     let data = JSON.stringify({
       email: email,
       username: username,
@@ -33,11 +38,20 @@ const AccountCreationPage = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
+        window.location.href = "/login";
       })
       .catch((error) => {
-        if (error === "Email already exists") {
+        if (error.response.data.error === "Email already exists") {
           setEmailValid(false);
           console.log("Email already exists");
+        }
+        if (error.response.data.error === "Invalid email format") {
+          setEmailFormatValid(false);
+          console.log("Invalid email format");
+        }
+        if (error.response.data.error === "Password should not contain username or email"){
+          setPasswordValid(false);
+          console.log("Password should not contain username or email");
         }
         console.log(error);
       });
@@ -76,6 +90,7 @@ const AccountCreationPage = () => {
           sx={{ margin: "10px 0", color: "white" }}
           onChange={(e) => setEmail(e.target.value)}
         />
+        {!emailValid && <Alert severity="error">Email already taken</Alert>}
         <TextField
           id="outlined-basic"
           label="Username"
@@ -92,6 +107,7 @@ const AccountCreationPage = () => {
           sx={{ margin: "10px 0", color: "white" }}
           onChange={(e) => setPassword(e.target.value)}
         />
+        {!passwordValid && <Alert severity="error">Password should not contain username or email</Alert>}
         <Button variant="contained" color="primary" onClick={handleCreateAccount}>
           Create Account
         </Button>
