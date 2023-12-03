@@ -28,13 +28,13 @@ questionsRouter2.post("/", async (req, res) => {
 // Get question(s) database.
 questionsRouter2.get("/", async (req, res) => {
   try {
+    const { question_id, tag, page } = req.query;
     const options = {
       lean: true,
       limit: 10,
       page: page || 1,
       forceCountFn: true,
     };
-    const { question_id, tag, page } = req.query;
 
     // If question_id is present, return that question
     if (question_id) {

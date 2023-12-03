@@ -13,6 +13,7 @@
     "cors": "^2.8.5",
     "express": "*",
     "mongoose": "*",
+    "mongoose-paginate-v2": "^1.7.4",
     "mysql": "*",
     "nodemon": "^3.0.1"
   }
