@@ -20,7 +20,7 @@ import WelcomePage from "./pages/welcome-page.jsx";
  * @returns {JSX.Element} JSX elements that represent the application's UI.
  */
 const FakeStackOverflow = () => {
-  const [currentPage, setCurrentPage] = useState("Welcome");
+  const [currentPage, setCurrentPage] = useState("Homepage");
   const [appModel, setAppModel] = useState(1);
   const [searchString, setSearchString] = useState("");
   const [searchResults, setSearchResults] = useState([]); // For search result page

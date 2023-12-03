@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, Box, Typography, TextField, Button } from "@mui/material";
 import { blue } from "@mui/material/colors";
+import Image from "../../images/collage-with-statue-meadow.jpg";
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
@@ -19,9 +20,9 @@ const LoginPage = () => {
     };
 
     return (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "cyan"}}>
-            <Card sx={{ display: "flex", flexDirection: "column", width: 300, padding: 20, borderRadius: 10}}>
-                <Typography variant="h4">Login</Typography>
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundImage: `url(${Image})`, backgroundSize: "cover",}}>
+            <Card sx={{ display: "flex", flexDirection: "column", width: 300, padding: 5, borderRadius: 10, backdropFilter: "blur(10px)", backgroundColor: "rgba(255, 255, 255, 0.5)"}}>
+                <Typography variant="h3" color="white" textAlign="center">Login</Typography>
                 <TextField id="outlined-basic" label="Username" variant="outlined" required="true" value={username} onChange={handleUsernameChange} sx={{ margin: "10px 0" }} />
                 <TextField id="outlined-basic" label="Password" variant="outlined" required="true" value={password} onChange={handlePasswordChange} sx={{ margin: "10px 0" }} />
                 <Button variant="contained" color="primary" onClick={handleLogin}>Login</Button>

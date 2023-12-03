@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography, Card, Button } from "@mui/material";
+import { Link } from "react-router-dom";
 import Image from "../../images/collage-with-statue-meadow.jpg";
 
 const WelcomePage = () => {
@@ -18,32 +19,51 @@ const WelcomePage = () => {
     >
       <Card
         sx={{
-          backgroundColor: "rgba(255, 255, 255)",
+          backgroundColor: "rgba(255, 255, 255, 0)", // Set the background color with transparency
           borderRadius: "10px",
           padding: "20px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: "10px",
+          boxShadow: "none",
         }}
       >
         <Typography
           sx={{
-            color: "blue",
-            fontSize: 50,
+            color: "white",
+            fontSize: 70,
             textAlign: "center",
             fontWeight: "bold",
           }}
         >
           Fake Stack Overflow
         </Typography>
-        <Button variant="contained" color="primary">
+        <Button
+          variant="contained"
+          color="primary"
+          component={Link}
+          to="/login"
+          style={{ textDecoration: "none", color: "white", backgroundColor: "green" }}
+        >
           Login
         </Button>
-        <Button variant="contained" color="primary">
+        <Button
+          variant="contained"
+          color="primary"
+          component={Link}
+          to="/register"
+          style={{ textDecoration: "none", color: "white", backgroundColor: "green" }}
+        >
           Register
         </Button>
-        <Button variant="contained" color="primary">
+        <Button
+          variant="contained"
+          color="primary"
+          component={Link}
+          to="/fakestackoverflow"
+          style={{ textDecoration: "none", color: "white", backgroundColor: "green" }}
+        >
           Guest
         </Button>
       </Card>
@@ -52,4 +72,3 @@ const WelcomePage = () => {
 };
 
 export default WelcomePage;
-
