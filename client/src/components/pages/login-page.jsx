@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Card, Box, Typography, TextField, Button, Alert } from "@mui/material";
 import Image from "../../images/collage-with-statue-meadow.jpg";
 import axios from "axios";
+import { UserContext } from "../../contexts/user-context";
 
 const LoginPage = () => {
+  const user = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [credentialsValid, setCredentialsValid] = useState(true);
@@ -37,6 +39,8 @@ const LoginPage = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
+        console.log(user)
+        user.setUser(response.data.user)
         window.location.href = "/fakestackoverflow";
       })
       .catch((error) => {
