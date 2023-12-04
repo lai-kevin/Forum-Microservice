@@ -48,9 +48,12 @@ users.post("/login", async (req, res) => {
   const password = req.body.password;
   const user = (await Users.find({ email: email }))[0];
   console.log("User: ", user);
-  const verdict = await bcrypt.compare(password, user.passwordHash);
-  console.log("Verdict: ", verdict);
-  if (verdict) {
+  let verdict;
+  if (user) {
+    verdict = await bcrypt.compare(password, user.passwordHash);
+    console.log("Verdict: ", verdict);
+  }
+  if (user && verdict) {
     req.session.user = user;
     res.status(200).json({ user: user });
   } else {

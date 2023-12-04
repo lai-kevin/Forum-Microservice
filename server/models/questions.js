@@ -1,5 +1,6 @@
 // Question Document Schema
 const mongoose = require("mongoose");
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const questionSchema = new mongoose.Schema({
   title: {
@@ -40,8 +41,9 @@ const questionSchema = new mongoose.Schema({
     default: [],
   },
   asked_by: {
-    type: String,
-    default: "Anonymous",
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
   },
   posted_time: {
     type: Date,
@@ -56,6 +58,8 @@ const questionSchema = new mongoose.Schema({
     default: 0,
   },
 });
+
+questionSchema.plugin(mongoosePaginate);
 
 questionSchema.virtual("url").get(function() {
   return `posts/question/${this._id}`;
