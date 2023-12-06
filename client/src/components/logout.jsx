@@ -26,7 +26,7 @@ const Logout = () => {
       .catch((error) => {
         console.log(error.response.data);
       });
-    navi("/fakestackoverflow");
+    navi("/");
   };
   return (
     <Box>

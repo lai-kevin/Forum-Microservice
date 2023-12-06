@@ -21,35 +21,35 @@ const LoginPage = () => {
   };
 
   const handleLogin = () => {
-      setCredentialsValid(true);
-      let data = JSON.stringify({
-        email: email,
-        password: password,
+    setCredentialsValid(true);
+    let data = JSON.stringify({
+      email: email,
+      password: password,
+    });
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://localhost:8000/api/users/login",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+      withCredentials: true,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        // set the user in the context, and save it to local storage, then redirect to the home page
+        console.log(response.data);
+        setUser(response.data);
+        navi("/fakestackoverflow");
+      })
+      .catch((error) => {
+        setCredentialsValid(false);
+        console.log(error);
       });
-
-      let config = {
-        method: "post",
-        maxBodyLength: Infinity,
-        url: "http://localhost:8000/api/users/login",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: data,
-        withCredentials: true,
-      };
-
-      axios
-        .request(config)
-        .then((response) => {
-          // set the user in the context, and save it to local storage, then redirect to the home page
-          console.log(response.data);
-          setUser(response.data);
-          navi("/fakestackoverflow");
-        })
-        .catch((error) => {
-          setCredentialsValid(false);
-          console.log(error);
-        });
   };
 
   return (
