@@ -66,7 +66,7 @@ const TagsPage = ({ appModel, setCurrentPage, setTagString }) => {
       >
         <div className="tag-container">
           {tags.map((tag, index) => {
-            const questions = tagQuestions[index];
+            const questions = tagQuestions[index] || [];
             return (
               <div className="tag-block" key={`TagBlock${JSON.stringify(tag)}`}>
                 <p
