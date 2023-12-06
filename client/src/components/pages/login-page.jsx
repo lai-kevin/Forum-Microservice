@@ -3,9 +3,11 @@ import { Card, Box, Typography, TextField, Button, Alert } from "@mui/material";
 import Image from "../../images/collage-with-statue-meadow.jpg";
 import axios from "axios";
 import { UserContext } from "../../contexts/user-context";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const user = useContext(UserContext);
+  const navi = useNavigate();
+  const [user, setUser] = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [credentialsValid, setCredentialsValid] = useState(true);
@@ -38,10 +40,9 @@ const LoginPage = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
-        console.log(user)
-        user.setUser(response.data.user)
-        window.location.href = "/fakestackoverflow";
+        console.log(response.data);
+        setUser(response.data)
+        navi("/fakestackoverflow");
       })
       .catch((error) => {
         setCredentialsValid(false);

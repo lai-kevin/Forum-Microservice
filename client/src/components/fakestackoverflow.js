@@ -1,5 +1,5 @@
 import { Model } from "../models/model.js";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Homepage from "./pages/homepage.js";
 import Header from "./header.js";
 import NavigationBar from "./navigation-bar.js";
@@ -12,6 +12,7 @@ import PostAnswerPage from "./pages/post-answer-page.js";
 import AccountCreationPage from "./pages/account-creation.jsx";
 import LoginPage from "./pages/login-page.jsx";
 import WelcomePage from "./pages/welcome-page.jsx";
+import { UserContext } from "../contexts/user-context.js";
 
 /**
  * The `FakeStackOverflow` function is a React component that represents a Stack Overflow-like application.
@@ -20,6 +21,7 @@ import WelcomePage from "./pages/welcome-page.jsx";
  * @returns {JSX.Element} JSX elements that represent the application's UI.
  */
 const FakeStackOverflow = () => {
+  const [user, setUser] = useContext(UserContext);
   const [currentPage, setCurrentPage] = useState("Homepage");
   const [appModel, setAppModel] = useState(1);
   const [searchString, setSearchString] = useState("");
@@ -28,6 +30,8 @@ const FakeStackOverflow = () => {
   const [currentQuestion, setCurrentQuestion] = useState(undefined); //For question answers page and post answer page. Stores a qid.
 
   var currentPageComponent = <div></div>;
+
+  console.log(user)
 
   if (appModel) {
     switch (currentPage) {
