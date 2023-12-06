@@ -16,7 +16,12 @@ import axios from "axios";
  * @param {function} setAppModel - A function to update the `appModel` object.
  * @returns {JSX.Element} - The rendered page layout with the list of questions and sorting options.
  */
-const Homepage = ({ appModel, setAppModel, setCurrentPage, setCurrentQuestion}) => {
+const Homepage = ({
+  appModel,
+  setAppModel,
+  setCurrentPage,
+  setCurrentQuestion,
+}) => {
   const [results, setResults] = useState([]);
   const [page, setPage] = useState(1);
 
@@ -25,12 +30,12 @@ const Homepage = ({ appModel, setAppModel, setCurrentPage, setCurrentQuestion}) 
     const fetchData = async () => {
       try {
         let config = {
-          method: 'get',
+          method: "get",
           maxBodyLength: Infinity,
           url: `http://localhost:8000/api/questions_v2?question_id&tag&page=${page}`,
           withCredentials: true,
         };
-      
+
         const response = await axios.request(config);
         setResults(response.data.docs);
       } catch (error) {
@@ -41,45 +46,56 @@ const Homepage = ({ appModel, setAppModel, setCurrentPage, setCurrentQuestion}) 
     fetchData();
   }, [page]);
 
-
   return (
-    <div className="page">
-      <div className="page-top">
-        <div className="page-info-and-sortby">
-          <div className="page-info">
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <h1>All Questions</h1>
-              <div style={{marginTop: 10, marginBottom: 10}}>
-                <Button variant="contained" onClick={ () => setPage(page === 0 ? page: page - 1)} >prev</Button>
-                <Button variant="contained" onClick={ () => setPage(results.length < 5 ? page: page + 1)} >next</Button>
+    <div>
+      <div className="page">
+        <div className="page-top">
+          <div className="page-info-and-sortby">
+            <div className="page-info">
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <h1>All Questions</h1>
               </div>
+              <div style={{ flexGrow: 1 }}></div>
+              <button
+                id="question-ask-button"
+                onClick={() => setCurrentPage("Post Question")}
+              >
+                Ask Question
+              </button>
             </div>
-            <div style={{ flexGrow: 1 }}></div>
-            <button
-              id="question-ask-button"
-              onClick={() => setCurrentPage("Post Question")}
-            >
-              Ask Question
-            </button>
           </div>
-          
+        </div>
+        <div id="result-list">
+          {results.length ? (
+            results.map((result) => {
+              return (
+                <ResultListItem
+                  question={result}
+                  setCurrentPage={setCurrentPage}
+                  setCurrentQuestion={setCurrentQuestion}
+                  key={`HomepageResultItem${JSON.stringify(result)}`}
+                />
+              );
+            })
+          ) : (
+            <h2 style={{ margin: 5 }}>No Questions Found</h2>
+          )}
         </div>
       </div>
-      <div id="result-list">
-        {results.length ? (
-          results.map((result) => {
-            return (
-              <ResultListItem
-                question={result}
-                setCurrentPage={setCurrentPage}
-                setCurrentQuestion={setCurrentQuestion}
-                key={`HomepageResultItem${JSON.stringify(result)}`}
-              />
-            );
-          })
-        ) : (
-          <h2 style={{ margin: 5 }}>No Questions Found</h2>
-        )}
+      <div style={{ position: "fixed", bottom: 0, right: 0, margin: 10 }}>
+        <Button
+          variant="contained"
+          onClick={() => setPage(page === 0 ? page : page - 1)}
+          style={{ marginRight: 10 }}
+        >
+          prev
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => setPage(results.length < 5 ? page : page + 1)}
+        >
+          next
+        </Button>
       </div>
     </div>
   );
