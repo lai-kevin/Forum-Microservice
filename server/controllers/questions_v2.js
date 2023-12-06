@@ -21,7 +21,7 @@ questionsRouter2.post("/", async (req, res) => {
     return res.status(201).json(savedQuestion);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error", json: error });
   }
 });
 
@@ -31,7 +31,7 @@ questionsRouter2.get("/", async (req, res) => {
     const { question_id, tag, page } = req.query;
     const options = {
       lean: true,
-      limit: 10,
+      limit: 5,
       page: page || 1,
       forceCountFn: true,
     };

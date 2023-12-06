@@ -1,7 +1,3 @@
-import { getAnswers } from "../../models/question";
-import { getTags } from "../../models/question";
-import { getQuestionMetaData } from "../../models/question";
-import { view } from "../../models/question";
 import "../../stylesheets/index.css";
 /**
  * Represents a JSX element for a tag item.
@@ -25,8 +21,6 @@ function tagsListItem(tag) {
  * @returns {JSX.Element} The rendered JSX code for the ResultListItem component.
  */
 const ResultListItem = ({
-  appModel,
-  setModel,
   question,
   setCurrentPage,
   setCurrentQuestion,
@@ -34,25 +28,24 @@ const ResultListItem = ({
   return (
     <div className="result-item">
       <div className="result-item-stats">
-        <p>{getAnswers(question, appModel).length} answers</p>
+        <p>{"NUM"} answers</p>
         <p>{question.views} views</p>
       </div>
       <div className="result-item-title-and-tag">
         <p
           className="question-title"
           onClick={() => {
-            setCurrentQuestion(question._id);
-            view(question, appModel, setModel).then(() => setCurrentPage("Answers"));
+            
           }}
         >
           {question.title}
         </p>
         <div className="result-item-tag-list">
-          {getTags(question, appModel).map((tag) => tagsListItem(tag))}
+          
         </div>
       </div>
       <div className="result-item-author-and-time">
-        {getQuestionMetaData(question)}
+      
       </div>
     </div>
   );
