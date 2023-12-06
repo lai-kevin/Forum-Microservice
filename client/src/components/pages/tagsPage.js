@@ -1,8 +1,10 @@
 import { getQuestions } from "../../models/tag";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../../contexts/user-context";
 import axios from "axios";
 
 const TagsPage = ({ setCurrentPage, setTag}) => {
+  const [user, setUser] = useContext(UserContext);
   const [tags, setTags] = useState([]);
   const [tagQuestions, setTagQuestions] = useState([]);
 
@@ -49,12 +51,14 @@ const TagsPage = ({ setCurrentPage, setTag}) => {
         <div className="page-info">
           <h1>{tags.length} Tags</h1>
           <h1 style={{ flex: 1, textAlign: "center" }}>All Tags</h1>
-          <button
-            id="question-ask-button"
-            onClick={() => setCurrentPage("Post Question")}
-          >
-            Ask Question
-          </button>
+          {user && (
+            <button
+              id="question-ask-button"
+              onClick={() => setCurrentPage("Post Question")}
+            >
+              Ask Question
+            </button>
+          )}
         </div>
       </div>
       <div

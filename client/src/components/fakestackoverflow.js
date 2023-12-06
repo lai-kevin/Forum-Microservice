@@ -28,7 +28,6 @@ const FakeStackOverflow = () => {
   const [currentQuestion, setCurrentQuestion] = useState(undefined); //For question answers page and post answer page. Stores a qid.
 
   var currentPageComponent = <div></div>;
-  console.log("Logged in as: ", user);
 
   switch (currentPage) {
     case "Homepage":
