@@ -1,4 +1,5 @@
 import "../../stylesheets/index.css";
+import { QuestionMetaData, getQuestionMetaData } from "../../utils/metadata_generators";
 /**
  * Represents a JSX element for a tag item.
  *
@@ -28,7 +29,7 @@ const ResultListItem = ({
   return (
     <div className="result-item">
       <div className="result-item-stats">
-        <p>{"NUM"} answers</p>
+        <p>{question.answers.length} answers</p>
         <p>{question.views} views</p>
       </div>
       <div className="result-item-title-and-tag">
@@ -41,10 +42,14 @@ const ResultListItem = ({
           {question.title}
         </p>
         <div className="result-item-tag-list">
+        {question.tags.map((tag) => tagsListItem(tag))}
+
         </div>
       </div>
       <div className="result-item-author-and-time">
-      
+      <div>
+        <QuestionMetaData question={question} />
+      </div>
       </div>
     </div>
   );

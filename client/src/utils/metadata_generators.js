@@ -8,7 +8,7 @@
 function getAnswerMetaData(answer) {
   var currDate = new Date();
   var currDateArr = currDate.toString().split(" ");
-  const answerDate = new Date(answer.ans_date_time)
+  const answerDate = new Date(answer.ans_date_time);
   var answerDateArr = answerDate.toString().split(" ");
   var metaDataString = "";
   //If answer was posted on day X
@@ -63,12 +63,11 @@ function getAnswerMetaData(answer) {
  * @param {object} question - An object representing a question
  * @returns {string} - A string representing the metadata of the question
  */
-function getQuestionMetaData(question) {
+function QuestionMetaData({ question }) {
   var currDate = new Date();
   var currDateArr = currDate.toString().split(" ");
-  const questionDate = new Date(question.ask_date_time)
+  const questionDate = new Date(question.posted_time);
   var questionDateArr = questionDate.toString().split(" ");
-  var metaDataString = "";
   //If question was posted on day X
   if (
     currDateArr[1] === questionDateArr[1] &&
@@ -78,45 +77,49 @@ function getQuestionMetaData(question) {
     if (currDate - questionDate < 60000) {
       //the question date should appear in seconds (if posted 0 mins. ago)
       var secondsAgo = Math.floor((currDate - questionDate) / 1000);
-      metaDataString = (
-        <p>
-          <span style={{ color: "green" }}>{question.asked_by}</span> asked{" "}
-          {secondsAgo} seconds ago
-        </p>
+      return (
+        <div>
+          <p>
+            <span style={{ color: "green" }}>{question.asked_by.username}</span> asked{" "}
+            {secondsAgo} seconds ago
+          </p>
+        </div>
       );
     } else if (currDate - questionDate < 3600000) {
       //minutes (if posted 0 hours ago)
       var minutesAgo = Math.floor((currDate - questionDate) / 60000);
-      metaDataString = (
-        <p>
-          <span style={{ color: "green" }}>{question.asked_by}</span> asked{" "}
-          {minutesAgo} minutes ago
-        </p>
+      return (
+        <div>
+          <p>
+            <span style={{ color: "green" }}>{question.asked_by.username}</span> asked{" "}
+            {minutesAgo} minutes ago
+          </p>
+        </div>
       );
     } else if (currDate - questionDate < 86400000) {
       //r hours (if posted less than 24 hrs ago).
       var hoursAgo = Math.floor((currDate - questionDate) / 3600000);
-      metaDataString = (
-        <p>
-          <span style={{ color: "green" }}>{question.asked_by}</span> asked{" "}
-          {hoursAgo} hours ago
-        </p>
+      return (
+        <div>
+          <p>
+            <span style={{ color: "green" }}>{question.asked_by.username}</span> asked{" "}
+            {hoursAgo} hours ago
+          </p>
+        </div>
       );
     }
   } else {
     //<username> questioned  <Month><day> at <hh:min>.
     var hourAndMinutes = questionDateArr[4].split(":").slice(0, 2).join(":");
-    metaDataString = (
-      <p>
-        <span style={{ color: "green" }}>{question.asked_by}</span> asked{" "}
-        {questionDateArr[1]} {questionDateArr[2]} at {hourAndMinutes}
-      </p>
+    return (
+      <div>
+        <p>
+          <span style={{ color: "green" }}>{question.asked_by.username}</span> asked{" "}
+          {questionDateArr[1]} {questionDateArr[2]} at {hourAndMinutes}
+        </p>
+      </div>
     );
   }
-  return metaDataString;
 }
 
-export {
-    getAnswerMetaData,
-    getQuestionMetaData,
-}
+export { getAnswerMetaData, QuestionMetaData };
