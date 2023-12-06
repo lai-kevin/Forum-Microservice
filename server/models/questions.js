@@ -5,7 +5,12 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const questionSchema = new mongoose.Schema({
   title: {
     type: String,
-    maxlength: 100,
+    maxlength: 50,
+    required: true,
+  },
+  summary: {
+    type: String,
+    maxlength: 140,
     required: true,
   },
   text: {

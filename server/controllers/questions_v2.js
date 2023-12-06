@@ -7,9 +7,10 @@ questionsRouter2.post("/", async (req, res) => {
     return res.status(401).json({ error: "Unauthorized" });
   }
   try {
-    const { title, question_text, tags } = req.body;
+    const { title, summary, question_text, tags } = req.body;
     const question = new Question({
       title: title,
+      summary: summary,
       text: question_text,
       tags: tags,
       asked_by: req.session.user._id,
