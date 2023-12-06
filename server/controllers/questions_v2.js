@@ -1,5 +1,8 @@
 const questionsRouter2 = require("express").Router();
 const Question = require("../models/questions");
+const Tag = require("../models/tags");
+const Answer = require("../models/answers");
+const Comment = require("../models/comment");
 
 // Create an question and store in database
 questionsRouter2.post("/", async (req, res) => {
@@ -34,6 +37,7 @@ questionsRouter2.get("/", async (req, res) => {
       lean: true,
       limit: 5,
       page: page || 1,
+      populate: ["tags", "answers", "asked_by", "comments"],
       forceCountFn: true,
     };
 

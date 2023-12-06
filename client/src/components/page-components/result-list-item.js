@@ -41,7 +41,6 @@ const ResultListItem = ({
           {question.title}
         </p>
         <div className="result-item-tag-list">
-          
         </div>
       </div>
       <div className="result-item-author-and-time">
