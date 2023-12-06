@@ -1,5 +1,5 @@
 import ResultListItem from "../page-components/result-list-item";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import "../../stylesheets/index.css";
 import { Button } from "@mui/material";
 import {
@@ -8,6 +8,7 @@ import {
   handleSortByUnansweredClickAll,
 } from "../utils/sorting";
 import axios from "axios";
+import { UserContext } from "../../contexts/user-context";
 
 /**
  * Renders a page displaying a list of questions.
@@ -22,6 +23,7 @@ const Homepage = ({
   setCurrentPage,
   setCurrentQuestion,
 }) => {
+  const [user, setUser] = useContext(UserContext);
   const [results, setResults] = useState([]);
   const [page, setPage] = useState(1);
 
@@ -56,12 +58,14 @@ const Homepage = ({
                 <h1>All Questions</h1>
               </div>
               <div style={{ flexGrow: 1 }}></div>
-              <button
-                id="question-ask-button"
-                onClick={() => setCurrentPage("Post Question")}
-              >
-                Ask Question
-              </button>
+              {user && (
+                <button
+                  id="question-ask-button"
+                  onClick={() => setCurrentPage("Post Question")}
+                >
+                  Ask Question
+                </button>
+              )}
             </div>
           </div>
         </div>

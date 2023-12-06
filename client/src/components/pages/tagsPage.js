@@ -1,12 +1,46 @@
-import React from "react";
 import { getQuestions } from "../../models/tag";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-const TagsPage = ({ appModel, setCurrentPage, setTagString}) => {
-  const tags = [];
+const TagsPage = ({ appModel, setCurrentPage, setTagString }) => {
+  const [tags, setTags] = useState([]);
+  const [tagQuestions, setTagQuestions] = useState([]);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        let config = {
+          method: "get",
+          maxBodyLength: Infinity,
+          url: "http://localhost:8000/api/tags_v2",
+          headers: {},
+        };
+
+        // Get all tags
+        const response = await axios.request(config);
+        const fetchedTags = response.data;
+        setTags(fetchedTags);
+
+        // Get all questions for each tag
+        const tagQuestions = await Promise.all(
+          fetchedTags.map(async (tag) => {
+            return await getQuestions(tag);
+          })
+        );
+        setTagQuestions(tagQuestions);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    
+
+    fetchTags();
+  }, []);
 
   const handleTagBlockClick = (tag) => {
     setTagString(tag.name);
-    setCurrentPage("Tag Questions")
+    setCurrentPage("Tag Questions");
   };
 
   return (
@@ -15,7 +49,10 @@ const TagsPage = ({ appModel, setCurrentPage, setTagString}) => {
         <div className="page-info">
           <h1>{tags.length} Tags</h1>
           <h1 style={{ flex: 1, textAlign: "center" }}>All Tags</h1>
-          <button id="question-ask-button" onClick={() => setCurrentPage("Post Question")}>
+          <button
+            id="question-ask-button"
+            onClick={() => setCurrentPage("Post Question")}
+          >
             Ask Question
           </button>
         </div>
@@ -28,8 +65,8 @@ const TagsPage = ({ appModel, setCurrentPage, setTagString}) => {
         }}
       >
         <div className="tag-container">
-          {tags.map((tag) => {
-            const questions = getQuestions(appModel, tag);
+          {tags.map((tag, index) => {
+            const questions = tagQuestions[index];
             return (
               <div className="tag-block" key={`TagBlock${JSON.stringify(tag)}`}>
                 <p

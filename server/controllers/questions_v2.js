@@ -32,7 +32,7 @@ questionsRouter2.post("/", async (req, res) => {
 // Get question(s) database.
 questionsRouter2.get("/", async (req, res) => {
   try {
-    const { question_id, tag, page } = req.query;
+    const { question_id, tag, page, paginate } = req.query;
     const options = {
       lean: true,
       limit: 5,
@@ -51,10 +51,17 @@ questionsRouter2.get("/", async (req, res) => {
     }
 
     // If tag is present, return questions with that tag
-    if (tag) {
+    if (tag && paginate) {
       const questions = await Question.paginate(
         { tags: { $in: [tag] } },
         options
+      );
+      return res.status(200).json(questions);
+    }
+
+    if (tag && !paginate) {
+      const questions = await Question.find(
+        { tags: { $in: [tag] } }
       );
       return res.status(200).json(questions);
     }
