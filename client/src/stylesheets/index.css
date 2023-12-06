@@ -24,6 +24,13 @@ header {
   align-items: center;
 }
 
+.user-info{
+  position: absolute;
+  left: 0;
+  display: flex;
+  margin-left: 1rem;
+}
+
 .search-bar-container{
   margin-left: auto;
 }
@@ -38,6 +45,7 @@ header {
   border: none;
   border-radius: 4px;
   font-size: 12px;
+  margin-right: 1rem;
 }
 
 .menu{
