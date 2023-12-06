@@ -2,7 +2,7 @@ import { getQuestions } from "../../models/tag";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const TagsPage = ({ appModel, setCurrentPage, setTagString }) => {
+const TagsPage = ({ setCurrentPage, setTag}) => {
   const [tags, setTags] = useState([]);
   const [tagQuestions, setTagQuestions] = useState([]);
 
@@ -39,7 +39,7 @@ const TagsPage = ({ appModel, setCurrentPage, setTagString }) => {
   }, []);
 
   const handleTagBlockClick = (tag) => {
-    setTagString(tag.name);
+    setTag(tag);
     setCurrentPage("Tag Questions");
   };
 

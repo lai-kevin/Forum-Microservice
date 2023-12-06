@@ -22,9 +22,9 @@ const FakeStackOverflow = () => {
   const [user, setUser] = useContext(UserContext);
   const [currentPage, setCurrentPage] = useState("Homepage");
   const [searchString, setSearchString] = useState("");
-  
+
   const [searchResults, setSearchResults] = useState([]); // For search result page
-  const [tagString, setTagString] = useState(""); // For Tag Questions page
+  const [tag, setTag] = useState(""); // For Tag Questions page
   const [currentQuestion, setCurrentQuestion] = useState(undefined); //For question answers page and post answer page. Stores a qid.
 
   var currentPageComponent = <div></div>;
@@ -41,7 +41,7 @@ const FakeStackOverflow = () => {
       break;
     case "Tags":
       currentPageComponent = (
-        <TagsPage setCurrentPage={setCurrentPage} setTagString={setTagString} />
+        <TagsPage setCurrentPage={setCurrentPage} setTag={setTag} />
       );
       break;
     case "Search":
@@ -79,7 +79,7 @@ const FakeStackOverflow = () => {
     case "Tag Questions":
       currentPageComponent = (
         <TagQuestionsPage
-          tagString={tagString}
+          tag={tag}
           setCurrentPage={setCurrentPage}
           setCurrentQuestion={setCurrentQuestion}
         />

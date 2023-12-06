@@ -1,14 +1,15 @@
 import ResultListItem from "../page-components/result-list-item";
+import { getQuestions } from "../../models/tag";
 import {
   handleSortByNewestClickTag,
   handleSortByUnansweredClickTag,
   handleSortByActiveClickTag,
 } from "../utils/sorting";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 /**
  * Renders a page with a list of questions related to a specific tag.
- * 
+ *
  * @param {Object} appModel - The application model.
  * @param {Function} setAppModel - The function to update the application model.
  * @param {string} tagString - The tag string used to filter the questions.
@@ -16,19 +17,21 @@ import { useState } from "react";
  * @param {Function} setCurrentQuestion - The function to update the currently selected question in the application.
  * @returns {JSX.Element} The rendered TagQuestionsPage component.
  */
-const TagQuestionsPage = ({
-  appModel,
-  setAppModel,
-  tagString,
-  setCurrentPage,
-  setCurrentQuestion,
-}) => {
-  var tag = appModel.data.tags.find(
-    (tag) => tag.name.toLowerCase() === tagString.toLowerCase()
-  );
-  const [results, setResults] = useState(
-    appModel.searchQuestions(`[${tag.name}]`)
-  );
+const TagQuestionsPage = ({ tag, setCurrentPage, setCurrentQuestion }) => {
+  const [results, setResults] = useState([]);
+
+  useEffect(() => {
+    const fetchTagQuestions = async () => {
+      try {
+        // Get all questions for tag
+        const tagQuestions = await getQuestions(tag);
+        setResults(tagQuestions);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchTagQuestions();
+  });
 
   return (
     <div className="page">
@@ -50,7 +53,6 @@ const TagQuestionsPage = ({
                   className="sort-button"
                   id="sortby-newest"
                   onClick={() => {
-                    handleSortByNewestClickTag(appModel, setResults, tag);
                   }}
                 >
                   Newest
@@ -61,7 +63,7 @@ const TagQuestionsPage = ({
                   className="sort-button"
                   id="sortby-active"
                   onClick={() => {
-                    handleSortByActiveClickTag(appModel, setResults, tag);
+                    
                   }}
                 >
                   Active
@@ -72,7 +74,7 @@ const TagQuestionsPage = ({
                   className="sort-button"
                   id="sortby-unanswered"
                   onClick={() => {
-                    handleSortByUnansweredClickTag(appModel, setResults, tag);
+                    
                   }}
                 >
                   Unanswered
@@ -87,8 +89,6 @@ const TagQuestionsPage = ({
           results.map((result) => {
             return (
               <ResultListItem
-                appModel={appModel}
-                setModel={setAppModel}
                 question={result}
                 setCurrentPage={setCurrentPage}
                 setCurrentQuestion={setCurrentQuestion}
