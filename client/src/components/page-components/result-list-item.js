@@ -36,7 +36,8 @@ const ResultListItem = ({
         <p
           className="question-title"
           onClick={() => {
-            
+            setCurrentQuestion(question);
+            setCurrentPage("Answers");
           }}
         >
           {question.title}

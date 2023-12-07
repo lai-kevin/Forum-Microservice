@@ -63,7 +63,7 @@ const FakeStackOverflow = () => {
       currentPageComponent = (
         <QuestionAnswersPage
           setCurrentPage={setCurrentPage}
-          questionQid={currentQuestion}
+          question={currentQuestion}
         />
       );
       break;

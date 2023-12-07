@@ -4,6 +4,8 @@ import { getAnswers } from "../../models/question";
 import { getAnswerMetaData } from "../../models/answer";
 import { getQuestionMetaData } from "../../models/question";
 import { useState, useEffect } from "react";
+import { sortByNewestAnswer } from "../utils/sorting";
+import { QuestionMetaData } from "../../utils/metadata_generators";
 
 /**
  * Renders a single answer item on a question page.
@@ -38,8 +40,7 @@ const AnswerResultListItem = ({ answer }) => {
   );
 };
 
-const QuestionAnswersPage = ({ appModel, setCurrentPage, questionQid }) => {
-  const question = appModel.getQuestionByQid(questionQid);
+const QuestionAnswersPage = ({ setCurrentPage, question }) => {
   var questionText = question.text;
   const hyperlinkRegex = /\[[^\]]+\]\([^)]+\)/g;
   var textArray = questionText.split(hyperlinkRegex);
@@ -58,18 +59,18 @@ const QuestionAnswersPage = ({ appModel, setCurrentPage, questionQid }) => {
     var i = 0;
     textArray = textArray.flatMap((text) => [text, hyperlinkHTML[i++]]);
   }
-  const [answers, setAnswers] = useState(undefined);
+  const [answers, setAnswers] = useState([]);
 
   useEffect(() => {
     const updateAnswers = async () => {
-      setAnswers(appModel.sortByNewestAnswer(getAnswers(question, appModel)));
+      setAnswers(sortByNewestAnswer(question.answers));
     };
     updateAnswers();
-  }, [appModel, question]);
+  }, [question]);
 
   return (
     <div>
-      { appModel && answers ? (
+      { answers ? (
         <div className="page">
         <div className="page-top">
           <div className="page-info">
@@ -91,7 +92,7 @@ const QuestionAnswersPage = ({ appModel, setCurrentPage, questionQid }) => {
             <p className="page-info-item" style={{ flexGrow: 1 }}>
               {textArray.map((text) => text)}
             </p>
-            {getQuestionMetaData(question)}
+             <QuestionMetaData question={question} />
           </div>
         </div>
         <div id="result-list">

@@ -47,7 +47,7 @@ export function getTags(question, model) {
 export function getQuestionMetaData(question) {
   var currDate = new Date();
   var currDateArr = currDate.toString().split(" ");
-  const questionDate = new Date(question.ask_date_time)
+  const questionDate = new Date(question.posted_time)
   var questionDateArr = questionDate.toString().split(" ");
   var metaDataString = "";
   //If question was posted on day X
