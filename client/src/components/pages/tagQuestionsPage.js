@@ -1,12 +1,13 @@
 import ResultListItem from "../page-components/result-list-item";
 import { getQuestions } from "../../models/tag";
+import { UserContext } from "../../contexts/user-context";
 import {
   handleSortByNewestClickTag,
   handleSortByUnansweredClickTag,
   handleSortByActiveClickTag,
 } from "../utils/sorting";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 /**
  * Renders a page with a list of questions related to a specific tag.
  *
@@ -18,6 +19,7 @@ import { useState, useEffect } from "react";
  * @returns {JSX.Element} The rendered TagQuestionsPage component.
  */
 const TagQuestionsPage = ({ tag, setCurrentPage, setCurrentQuestion }) => {
+  const [user, setUser] = useContext(UserContext);
   const [results, setResults] = useState([]);
 
   useEffect(() => {
@@ -40,9 +42,11 @@ const TagQuestionsPage = ({ tag, setCurrentPage, setCurrentQuestion }) => {
           <div className="page-info">
             <h1>Questions of Tag: [{tag.name}]</h1>
             <div style={{ flexGrow: 1 }}></div>
-            <button id="question-ask-button" onClick={() => {}}>
-              Ask Question
-            </button>
+            {user && (
+              <button id="question-ask-button" onClick={() => {}}>
+                Ask Question
+              </button>
+            )}
           </div>
           <div className="num-questions-sortby">
             <p> {results.length} questions</p>
