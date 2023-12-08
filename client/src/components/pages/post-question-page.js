@@ -25,7 +25,6 @@ const PostQuestionPage = ({ appModel, setAppModel, setCurrentPage }) => {
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionText, setQuestionText] = useState("");
   const [tags, setTags] = useState("");
-  const [username, setUsername] = useState("");
   const [tagsError, setTagsError] = useState("");
   const [hyperlinkError, setHyperlinkError] = useState("");
   const [questionSummary, setQuestionSummary] = useState("");
@@ -60,9 +59,6 @@ const PostQuestionPage = ({ appModel, setAppModel, setCurrentPage }) => {
     if (tagsTooLong) {
       setTagsError("Invalid: Tag(s) too long");
     }
-    if (username.length === 0) {
-      valid = false;
-    }
 
     // Look for invalid hyperlinks
     const emptyHyperlinkMatch = questionText.match(/\[.*\]\(\)/g); // match [...]()
@@ -91,7 +87,7 @@ const PostQuestionPage = ({ appModel, setAppModel, setCurrentPage }) => {
           title: title,
           summary: questionSummary,
           question_text: text,
-          tags_strings: tagStrings,
+          tag_strings: tagStrings,
         });
 
         let config = {
