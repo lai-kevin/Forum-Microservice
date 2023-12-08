@@ -9,17 +9,19 @@ export async function getQuestions(tag) {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
-    url: `http://localhost:8000/api/questions_v2?tag=${tag._id}&paginate=false`,
+    url: `http://localhost:8000/api/questions_v2?tag=${tag._id}`,
     headers: {},
   };
 
   await axios
     .request(config)
     .then((response) => {
-      questions = response.data.docs;
+      questions = response.data;
     })
     .catch((error) => {
       console.log(error);
     });
+
+  console.log(questions)
   return questions;
 }
