@@ -4,6 +4,7 @@ const Tag = require("../models/tags");
 const Answer = require("../models/answers");
 const Comment = require("../models/comment");
 const questions = require("../models/questions");
+const axios = require("axios");
 
 // Create an question and store in database
 questionsRouter2.post("/", async (req, res) => {
@@ -11,14 +12,29 @@ questionsRouter2.post("/", async (req, res) => {
     return res.status(401).json({ error: "Unauthorized" });
   }
   try {
-    const { title, summary, question_text, tags_strings } = req.body;
+    const { title, summary, question_text, tag_strings } = req.body;
 
     // Check if tags exist in database, if not, create them
     let tags = [];
-    tags_strings.forEach(async (tag_string) => {
+    tags = await Promise.all(tag_strings.map(async (tag_string) => {
+      const tag = await Tag.findOne({ name: tag_string });
+      if (tag) {
+       return tag.id
+      } else {
+        const newTag = new Tag({
+          name: tag_string,
+          created_by: req.session.user._id,
+        });
+        const savedTag = await newTag.save();
+        if (!savedTag) {
+          return res.status(400).json({ error: "Could not save tag" });
+        }
+        console.log(savedTag)
+        return savedTag.id
+      }
+    }));
 
-    })
-
+    console.log(tags);
     const question = new Question({
       title: title,
       summary: summary,
