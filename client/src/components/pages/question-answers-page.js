@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { UserContext } from "../../contexts/user-context";
 import "../../stylesheets/index.css";
 import { getAnswers } from "../../models/question";
 import { getAnswerMetaData } from "../../models/answer";
@@ -41,6 +42,7 @@ const AnswerResultListItem = ({ answer }) => {
 };
 
 const QuestionAnswersPage = ({ setCurrentPage, question }) => {
+  const [user, setUser] = useContext(UserContext);
   var questionText = question.text;
   const hyperlinkRegex = /\[[^\]]+\]\([^)]+\)/g;
   var textArray = questionText.split(hyperlinkRegex);
@@ -78,12 +80,14 @@ const QuestionAnswersPage = ({ setCurrentPage, question }) => {
               <b>{answers.length} answers</b>
             </p>
             <h2 style={{ flexGrow: 1 }}>{question.title}</h2>
-            <button
-              id="question-ask-button"
-              onClick={() => setCurrentPage("Post Question")}
-            >
-              Ask Question
-            </button>
+            {user && (
+              <button
+                id="question-ask-button"
+                onClick={() => setCurrentPage("Post Question")}
+              >
+                Ask Question
+              </button>
+            )}
           </div>
           <div className="page-info">
             <p className="page-info-item">

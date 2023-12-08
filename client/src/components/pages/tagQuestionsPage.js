@@ -28,7 +28,6 @@ const TagQuestionsPage = ({ tag, setCurrentPage, setCurrentQuestion }) => {
       try {
         // Get all questions for tag
         const tagQuestions = await getQuestions(tag);
-        console.log(tagQuestions)
         setResults(tagQuestions);
       } catch (error) {
         console.log(error);
@@ -44,9 +43,11 @@ const TagQuestionsPage = ({ tag, setCurrentPage, setCurrentQuestion }) => {
           <div className="page-info">
             <h1>Questions of Tag: [{tag.name}]</h1>
             <div style={{ flexGrow: 1 }}></div>
-            <button id="question-ask-button" onClick={() => {}}>
-              Ask Question
-            </button>
+            {user && (
+              <button id="question-ask-button" onClick={() => {}}>
+                Ask Question
+              </button>
+            )}
           </div>
           <div className="num-questions-sortby">
             <p> {results.length} questions</p>

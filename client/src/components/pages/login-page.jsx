@@ -42,7 +42,6 @@ const LoginPage = () => {
       .request(config)
       .then((response) => {
         // set the user in the context, and save it to local storage, then redirect to the home page
-        console.log(response.data);
         setUser(response.data);
         navi("/fakestackoverflow");
       })
