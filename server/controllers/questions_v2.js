@@ -3,7 +3,6 @@ const Question = require("../models/questions");
 const Tag = require("../models/tags");
 const Answer = require("../models/answers");
 const Comment = require("../models/comment");
-const sorting = require("../utils/sorting");
 const questions = require("../models/questions");
 
 // Create an question and store in database
@@ -12,7 +11,14 @@ questionsRouter2.post("/", async (req, res) => {
     return res.status(401).json({ error: "Unauthorized" });
   }
   try {
-    const { title, summary, question_text, tags } = req.body;
+    const { title, summary, question_text, tags_strings } = req.body;
+
+    // Check if tags exist in database, if not, create them
+    let tags = [];
+    tags_strings.forEach(async (tag_string) => {
+
+    })
+
     const question = new Question({
       title: title,
       summary: summary,

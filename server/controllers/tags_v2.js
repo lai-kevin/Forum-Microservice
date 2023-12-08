@@ -25,8 +25,16 @@ tagsRouter2.post("/", async (req, res) => {
 // Get tag(s) database.
 tagsRouter2.get("/", async (req, res) => {
   try {
-    const tags = await Tag.find({});
-    res.status(200).json(tags);
+    let response = {};
+
+    // If tag name is present, return that tag
+    if(req.query.tag_name){
+      response = await res.status(200).json(await Tag.findOne({ name: req.query.tag_name }));
+    } else {
+      const tags = await Tag.find({});
+      response = res.status(200).json(await Tag.find({}));
+    }
+    return response;
   } catch (error) {
     res.status(500).json({ error: "Internal server error", message: error });
   }
