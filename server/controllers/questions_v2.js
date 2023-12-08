@@ -27,18 +27,25 @@ questionsRouter2.post("/", async (req, res) => {
     return res.status(201).json(savedQuestion);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ error: "Internal server error", json: error });
+    return res
+      .status(500)
+      .json({ error: "Internal server error", json: error });
   }
 });
 
 // Get question(s) database.
 questionsRouter2.get("/", async (req, res) => {
   try {
-    const { question_id, tag} = req.query;
+    const { question_id, tag } = req.query;
 
     // If question_id is present, return that question
     if (question_id) {
-      const question = await Question.findById(question_id);
+      const question = await Question.findById(question_id).populate([
+        "tags",
+        "answers",
+        "asked_by",
+        "comments",
+      ]);
       if (!question) {
         return res.status(404).json({ error: "Question not found" });
       }
@@ -47,14 +54,19 @@ questionsRouter2.get("/", async (req, res) => {
 
     // If tag is present, return questions with that tag
     if (tag) {
-      let questions = await Question.find(
-        { tags: { $in: [tag] } }
-      );
+      let questions = await Question.find({ tags: { $in: [tag] } }).populate([
+        "tags",
+        "answers",
+        "asked_by",
+        "comments",
+      ]);
       return res.status(200).json(questions);
     }
-    
+
     // If no query parameters are present, return all questions
-    let questions = await Question.find({}).sort({posted_time: -1}).populate(["tags", "answers", "asked_by", "comments"])
+    let questions = await Question.find({})
+      .sort({ posted_time: -1 })
+      .populate(["tags", "answers", "asked_by", "comments"]);
     return res.status(200).json(questions);
   } catch (error) {
     console.log(error);
@@ -101,7 +113,7 @@ questionsRouter2.delete("/", async (req, res) => {
       _id: question_id,
       asked_by: req.session.user._id,
     });
-    console.log(req.session.user._id)
+    console.log(req.session.user._id);
     if (!question) {
       return res.status(404).json({ error: "Question not found" });
     }
