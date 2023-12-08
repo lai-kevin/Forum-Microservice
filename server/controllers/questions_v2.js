@@ -3,6 +3,8 @@ const Question = require("../models/questions");
 const Tag = require("../models/tags");
 const Answer = require("../models/answers");
 const Comment = require("../models/comment");
+const sorting = require("../utils/sorting");
+const questions = require("../models/questions");
 
 // Create an question and store in database
 questionsRouter2.post("/", async (req, res) => {
@@ -32,14 +34,7 @@ questionsRouter2.post("/", async (req, res) => {
 // Get question(s) database.
 questionsRouter2.get("/", async (req, res) => {
   try {
-    const { question_id, tag, page, paginate } = req.query;
-    const options = {
-      lean: true,
-      limit: 5,
-      page: page || 1,
-      populate: ["tags", "answers", "asked_by", "comments"],
-      forceCountFn: true,
-    };
+    const { question_id, tag} = req.query;
 
     // If question_id is present, return that question
     if (question_id) {
@@ -51,23 +46,15 @@ questionsRouter2.get("/", async (req, res) => {
     }
 
     // If tag is present, return questions with that tag
-    if (tag && paginate) {
-      const questions = await Question.paginate(
-        { tags: { $in: [tag] } },
-        options
-      );
-      return res.status(200).json(questions);
-    }
-
-    if (tag && !paginate) {
-      const questions = await Question.find(
+    if (tag) {
+      let questions = await Question.find(
         { tags: { $in: [tag] } }
       );
       return res.status(200).json(questions);
     }
-
+    
     // If no query parameters are present, return all questions
-    const questions = await Question.paginate({}, options);
+    let questions = await Question.find({}).sort({posted_time: -1}).populate(["tags", "answers", "asked_by", "comments"])
     return res.status(200).json(questions);
   } catch (error) {
     console.log(error);
