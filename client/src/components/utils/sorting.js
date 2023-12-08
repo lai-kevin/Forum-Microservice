@@ -1,13 +1,74 @@
-import {
-  getAllQuestionsActive,
-  getAllQuestionsNewest,
-  getAllQuestionsUnanswered,
-} from "../../utils/sorting";
-
 import searchQuestions from "./search";
+import axios from "axios";
 /**
  * This file contains all the sorting functions for sorby
  */
+
+//Returns all questions sorted by Newest-Oldest
+async function getAllQuestionsNewest() {
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: `http://localhost:8000/api/questions_v2`,
+    headers: {},
+    withCredentials: true,
+  };
+
+  let questions = [];
+  await axios
+    .request(config)
+    .then((response) => {
+      questions = response.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  return sortByNewestQuestion(questions);
+}
+//Returns all questions sorted by Activity. Latest answer first
+async function getAllQuestionsActive() {
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: `http://localhost:8000/api/questions_v2`,
+    headers: {},
+    withCredentials: true,
+  };
+
+  let questions = [];
+  await axios
+    .request(config)
+    .then((response) => {
+      questions = response.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  
+  return sortByActive(questions);
+}
+//Returns all questions filtered by Unanswered
+async function getAllQuestionsUnanswered() {
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: `http://localhost:8000/api/questions_v2`,
+    headers: {},
+    withCredentials: true,
+  };
+
+  let questions = [];
+  await axios
+    .request(config)
+    .then((response) => {
+      questions = response.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  return sortByUnanswered(questions);
+}
 
 //General sort answerby newest function
 function sortByNewestAnswer(answers) {
@@ -17,7 +78,7 @@ function sortByNewestAnswer(answers) {
     } else if (answer2 === undefined) {
       return -1;
     } else {
-      return new Date(answer2.aposted_time) - new Date(answer1.posted_time);
+      return new Date(answer2.posted_time) - new Date(answer1.posted_time);
     }
   });
   return result;
@@ -25,6 +86,7 @@ function sortByNewestAnswer(answers) {
 
 //General sort by newest function
 function sortByNewestQuestion(questions) {
+  
   return [...questions].sort((question1, question2) => {
     return new Date(question2.posted_time) - new Date(question1.posted_time);
   });
@@ -33,9 +95,8 @@ function sortByNewestQuestion(questions) {
 //General sort by active function
 function sortByActive(questions) {
   return [...questions].sort((question1, question2) => {
-    var question1LatestAnswer = this.sortByNewestAnswer(question1.answers)[0];
-    var question2LatestAnswer = this.sortByNewestAnswer(question2.answers)[0];
-
+    var question1LatestAnswer = sortByNewestAnswer(question1.answers)[0];
+    var question2LatestAnswer = sortByNewestAnswer(question2.answers)[0];
     if (question1LatestAnswer === undefined) {
       return 1;
     } else if (question2LatestAnswer === undefined) {
@@ -58,18 +119,19 @@ function sortByUnanswered(questions) {
 }
 
 // Homepage sortby handlers
-function handleSortByUnansweredClickAll(setResults) {
-  var results = getAllQuestionsUnanswered();
+async function handleSortByUnansweredClickAll(setResults) {
+  var results = await getAllQuestionsUnanswered();
   setResults(results);
 }
 
-function handleSortByActiveClickAll(setResults) {
-  var results = getAllQuestionsActive();
+async function handleSortByActiveClickAll(setResults) {
+  var results = await getAllQuestionsActive();
+
   setResults(results);
 }
 
-function handleSortByNewestClickAll(setResults) {
-  var results = getAllQuestionsNewest();
+async function handleSortByNewestClickAll(setResults) {
+  var results = await getAllQuestionsNewest();
   setResults(results);
 }
 

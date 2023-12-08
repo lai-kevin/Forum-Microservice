@@ -34,12 +34,12 @@ const Homepage = ({
         let config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `http://localhost:8000/api/questions_v2?question_id&tag&page=${page}`,
+          url: `http://localhost:8000/api/questions_v2`,
           withCredentials: true,
         };
 
         const response = await axios.request(config);
-        setResults(response.data.docs);
+        setResults(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -67,6 +67,48 @@ const Homepage = ({
                 </button>
               )}
             </div>
+          </div>
+          <div className="num-questions-sortby">
+            <p>{results.length} questions</p>
+            <div style={{ flexGrow: 1 }}></div>
+            <ul className="sortby">
+              <li>
+                <button
+                  className="sort-button"
+                  id="sortby-newest"
+                  onClick={ async () => { 
+                    await handleSortByNewestClickAll(setResults, page);
+                    console.log("sort by newest")
+                  }
+
+                  }
+                >
+                  Newest
+                </button>
+              </li>
+              <li>
+                <button
+                  className="sort-button"
+                  id="sortby-active"
+                  onClick={ async () =>
+                    await handleSortByActiveClickAll(setResults, page)
+                  }
+                >
+                  Active
+                </button>
+              </li>
+              <li>
+                <button
+                  className="sort-button"
+                  id="sortby-unanswered"
+                  onClick={ async () =>
+                    await handleSortByUnansweredClickAll(setResults, page)
+                  }
+                >
+                  Unanswered
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
         <div id="result-list">
