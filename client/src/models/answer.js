@@ -20,15 +20,15 @@ export function getAnswerMetaData(answer) {
     if (currDate - answerDate < 60000) {
       //the answer date should appear in seconds (if posted 0 mins. ago)
       var secondsAgo = Math.floor((currDate - answerDate) / 1000);
-      metaDataString = <p><span style={{color: "green"}}>{answer.ans_by}</span> answered {secondsAgo} seconds ago</p>;
+      metaDataString = <p><span style={{color: "green"}}>{answer.ans_by.username}</span> answered {secondsAgo} seconds ago</p>;
     } else if (currDate - answerDate < 3600000) {
       //minutes (if posted 0 hours ago)
       var minutesAgo = Math.floor((currDate - answerDate) / 60000);
-      metaDataString = <p><span style={{color: "green"}}>{answer.ans_by}</span> answered {minutesAgo} minutes ago</p>;
+      metaDataString = <p><span style={{color: "green"}}>{answer.ans_by.username}</span> answered {minutesAgo} minutes ago</p>;
     } else if (currDate - answerDate < 86400000) {
       //r hours (if posted less than 24 hrs ago).
       var hoursAgo = Math.floor((currDate - answerDate) / 3600000);
-      metaDataString = <p><span style={{color: "green"}}>{answer.ans_by}</span> answered {hoursAgo} hours ago</p>;
+      metaDataString = <p><span style={{color: "green"}}>{answer.ans_by.username}</span> answered {hoursAgo} hours ago</p>;
     }
   } else {
     //<username> answered  <Month><day> at <hh:min>.

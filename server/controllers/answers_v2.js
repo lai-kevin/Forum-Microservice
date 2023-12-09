@@ -41,7 +41,13 @@ answersRouter2.post("/", async (req, res) => {
 answersRouter2.get("/", async (req, res) => {
   try {
     const question_id = req.query.question_id;
-    const questionWithAnswers = await Question.findOne({ _id: question_id }).populate("answers");
+    const questionWithAnswers = await Question.findOne({ _id: question_id }).populate({
+      path: "answers",
+      populate: {
+        path: "ans_by",
+        model: "User"
+      }
+    });
     res.status(200).json(questionWithAnswers.answers);
   } catch (error) {
     console.log(error);
