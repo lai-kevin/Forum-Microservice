@@ -158,14 +158,14 @@ async  function handleSortByUnansweredClickTag(setResults, tag) {
   setResults(sortByUnanswered(results));
 }
 
-function handleSortByActiveClickTag(setResults, tag) {
-  let results = searchQuestions(`[${tag.name.toLowerCase()}]`);
+async function handleSortByActiveClickTag(setResults, tag) {
+  let results = await searchQuestions(`[${tag.name.toLowerCase()}]`);
   console.log(results);
   setResults(sortByActive(results));
 }
 
-function handleSortByNewestClickTag(setResults, tag) {
-  let results = searchQuestions(`[${tag.name.toLowerCase()}]`);
+async function handleSortByNewestClickTag(setResults, tag) {
+  let results = await searchQuestions(`[${tag.name.toLowerCase()}]`);
   console.log(results);
   setResults(sortByNewestQuestion(results));
 }

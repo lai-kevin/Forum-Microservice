@@ -61,7 +61,8 @@ const TagQuestionsPage = ({ tag, setCurrentPage, setCurrentQuestion }) => {
                 <button
                   className="sort-button"
                   id="sortby-newest"
-                  onClick={() => {
+                  onClick={async () => {
+                    await handleSortByNewestClickTag(setResults, tag);
                   }}
                 >
                   Newest
@@ -71,8 +72,8 @@ const TagQuestionsPage = ({ tag, setCurrentPage, setCurrentQuestion }) => {
                 <button
                   className="sort-button"
                   id="sortby-active"
-                  onClick={() => {
-                    
+                  onClick={async () => {
+                    await handleSortByActiveClickTag(setResults, tag);
                   }}
                 >
                   Active
@@ -82,8 +83,8 @@ const TagQuestionsPage = ({ tag, setCurrentPage, setCurrentQuestion }) => {
                 <button
                   className="sort-button"
                   id="sortby-unanswered"
-                  onClick={() => {
-                    
+                  onClick={async () => {
+                    await handleSortByUnansweredClickTag(setResults, tag);
                   }}
                 >
                   Unanswered
@@ -95,7 +96,7 @@ const TagQuestionsPage = ({ tag, setCurrentPage, setCurrentQuestion }) => {
       </div>
       <div id="result-list">
         {results.length ? (
-          results.slice(start,end).map((result) => {
+          results.slice(start, end).map((result) => {
             return (
               <ResultListItem
                 question={result}
@@ -112,7 +113,7 @@ const TagQuestionsPage = ({ tag, setCurrentPage, setCurrentQuestion }) => {
       <div style={{ position: "fixed", bottom: 0, right: 0, margin: 10 }}>
         <Button
           variant="contained"
-          onClick={() => setPage(page === 1 ? 1: page - 1)}
+          onClick={() => setPage(page === 1 ? 1 : page - 1)}
           style={{ marginRight: 10 }}
         >
           prev
