@@ -146,4 +146,18 @@ questionsRouter2.delete("/", async (req, res) => {
   }
 });
 
+questionsRouter2.patch("/view", async (req, res) => {
+  try {
+    const { question_id } = req.query;
+    const question = await Question.findOneAndUpdate({ _id: question_id }, { $inc: { views: 1 } }, { new: true });
+    if (!question) {
+      return res.status(404).json({ error: "Question not found" });
+    }
+    return res.status(200).json({ messsage: "Success", views: question.views });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = questionsRouter2;
