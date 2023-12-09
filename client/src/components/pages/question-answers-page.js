@@ -10,8 +10,23 @@ import { QuestionMetaData } from "../../utils/metadata_generators";
 import axios from "axios";
 
 /**
+ * Renders a single tag item.
+ *
+ * @param {Object} tag - The tag object.
+ * @param {string} tag.name - The name of the tag.
+ * @returns {JSX.Element} The rendered tag item.
+ */
+function tagsListItem(tag) {
+  return (
+    <div className="tag-item" key={JSON.stringify(tag)}>
+      <p>{tag.name}</p>
+    </div>
+  );
+}
+
+/**
  * Renders a single answer item on a question page.
- * 
+ *
  * @param {Object} answer - The answer object.
  * @returns {JSX.Element} - Rendered answer item, including the answer text and metadata.
  */
@@ -72,77 +87,78 @@ const QuestionAnswersPage = ({ setCurrentPage, question }) => {
   }, [question]);
 
   // Increment View
-  useEffect( () => {
+  useEffect(() => {
     const incrementView = async () => {
       let config = {
-        method: 'patch',
+        method: "patch",
         maxBodyLength: Infinity,
         url: `http://localhost:8000/api/questions_v2/view?question_id=${question._id}`,
-        headers: {}
+        headers: {},
       };
-      
-      axios.request(config)
-      .then((response) => {
-        console.log("viewed question");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-      
+
+      axios
+        .request(config)
+        .then((response) => {
+          console.log("viewed question");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     };
     incrementView();
   }, [question]);
 
-
-
   return (
     <div>
-      { answers ? (
+      {answers ? (
         <div className="page">
-        <div className="page-top">
-          <div className="page-info">
-            <p className="page-info-item">
-              <b>{answers.length} answers</b>
-            </p>
-            <h2 style={{ flexGrow: 1 }}>{question.title}</h2>
-            {user && (
-              <button
-                id="question-ask-button"
-                onClick={() => setCurrentPage("Post Question")}
-              >
-                Ask Question
-              </button>
-            )}
+          <div className="page-top">
+            <div className="page-info">
+              <p className="page-info-item">
+                <b>{answers.length} answers</b>
+              </p>
+              <h2 style={{ flexGrow: 1 }}>{question.title}</h2>
+              {user && (
+                <button
+                  id="question-ask-button"
+                  onClick={() => setCurrentPage("Post Question")}
+                >
+                  Ask Question
+                </button>
+              )}
+            </div>
+            <div className="page-info">
+              <p className="page-info-item">
+                <b>{question.views + 1} views</b>
+              </p>
+              <p className="page-info-item" style={{ flexGrow: 1 }}>
+                {textArray.map((text) => text)}
+              </p>
+              <QuestionMetaData question={question} />
+            </div>
+            <div className="result-item-tag-list" style={{justifyContent:"right"}}>
+              <h4>Tags: </h4>
+              {question.tags.map((tag) => tagsListItem(tag))}
+            </div>
           </div>
-          <div className="page-info">
-            <p className="page-info-item">
-              <b>{question.views + 1} views</b>
-            </p>
-            <p className="page-info-item" style={{ flexGrow: 1 }}>
-              {textArray.map((text) => text)}
-            </p>
-             <QuestionMetaData question={question} />
+          <div id="result-list">
+            {answers.map((answer) => (
+              <AnswerResultListItem answer={answer} key={`${answer._id}`} />
+            ))}
+          </div>
+          <div style={{ margin: 1 }}>
+            <button
+              className="button-blue"
+              id="question-answer-button"
+              onClick={() => setCurrentPage("Post Answer")}
+            >
+              Answer Question
+            </button>
           </div>
         </div>
-        <div id="result-list">
-          {answers.map((answer) => (
-            <AnswerResultListItem answer={answer} key={`${answer._id}`} />
-          ))}
-        </div>
-        <div style={{ margin: 1 }}>
-          <button
-            className="button-blue"
-            id="question-answer-button"
-            onClick={() => setCurrentPage("Post Answer")}
-          >
-            Answer Question
-          </button>
-        </div>
-      </div>
       ) : (
         <div></div>
-      )
-    }
+      )}
     </div>
   );
 };
