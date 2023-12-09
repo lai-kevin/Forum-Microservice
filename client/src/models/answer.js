@@ -8,7 +8,7 @@
 export function getAnswerMetaData(answer) {
   var currDate = new Date();
   var currDateArr = currDate.toString().split(" ");
-  var answerDate = new Date(answer.ans_date_time);
+  var answerDate = new Date(answer.posted_time);
   var answerDateArr = answerDate.toString().split(" ");
   var metaDataString = "";
   //If answer was posted on day X

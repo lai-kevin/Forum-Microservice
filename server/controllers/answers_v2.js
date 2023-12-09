@@ -41,8 +41,8 @@ answersRouter2.post("/", async (req, res) => {
 answersRouter2.get("/", async (req, res) => {
   try {
     const question_id = req.query.question_id;
-    const answers = await Answer.find({ question_id: question_id });
-    res.status(200).json(answers);
+    const questionWithAnswers = await Question.findOne({ _id: question_id }).populate("answers");
+    res.status(200).json(questionWithAnswers.answers);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Failed to retrieve answers from database" });

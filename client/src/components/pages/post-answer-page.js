@@ -1,5 +1,7 @@
 import { useState } from "react";
-
+import { createAnswer } from "../utils/answer";
+import { UserContext } from "../../contexts/user-context";
+import { useContext } from "react";
 const HyperlinkErrorMessage = ({ hyperlinkError }) => {
   return (
     <div>
@@ -13,19 +15,12 @@ const HyperlinkErrorMessage = ({ hyperlinkError }) => {
  * Includes input fields for the username and answer text,
  * as well as a validation check for hyperlinks in the answer text.
  *
- * @param {Object} appModel - The model object that contains the application data and methods.
- * @param {Function} setAppModel - A function to update the appModel object.
  * @param {Function} setCurrentPage - A function to update the current page of the application.
  * @param {Object} currentQuestion - The question object for which the answer is being posted.
  * @returns {JSX.Element} - The rendered form for posting an answer.
  */
-const PostAnswerPage = ({
-  appModel,
-  setAppModel,
-  setCurrentPage,
-  currentQuestion,
-}) => {
-  const [username, setUsername] = useState("");
+const PostAnswerPage = ({ setCurrentPage, currentQuestion }) => {
+  const [user, setUser] = useContext(UserContext);
   const [answerText, setAnswerText] = useState("");
   const [hyperlinkError, setHyperlinkError] = useState("");
 
@@ -47,11 +42,11 @@ const PostAnswerPage = ({
         );
       }
     }
-    if (username.length > 0 && answerText.length > 0 && valid) {
-      appModel.createAnswer(answerText, username, currentQuestion).then(() => setCurrentPage("Answers"));
+    if (answerText.length > 0 && valid) {
+      createAnswer(answerText, currentQuestion).then(() =>
+        setCurrentPage("Answers")
+      );
       //redirect to answer page
-      setAppModel(undefined);
-      
     } else {
       console.log(`Invalid Answer Form`);
     }
@@ -60,15 +55,6 @@ const PostAnswerPage = ({
   return (
     <div className="form">
       <form onSubmit={(event) => handlePostAnswerClick(event)}>
-        <h1>Username*</h1>
-        <input
-          type="text"
-          className="single-line-textbox"
-          id="answer-username-input"
-          required
-          minLength="1"
-          onChange={(event) => setUsername(event.target.value)}
-        />
         <h1>Answer Text*</h1>
         <textarea
           className="multi-line-textbox"

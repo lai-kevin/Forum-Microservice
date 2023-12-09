@@ -79,9 +79,25 @@ const QuestionAnswersPage = ({ setCurrentPage, question }) => {
   }
   const [answers, setAnswers] = useState([]);
 
+  // Update with latest answers from the server
   useEffect(() => {
     const updateAnswers = async () => {
-      setAnswers(sortByNewestAnswer(question.answers));
+      let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `http://localhost:8000/api/answers_v2?question_id=${question._id}`,
+        headers: {}
+      };
+      
+      let answers = [];
+      await axios.request(config)
+      .then((response) => {
+        answers = response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      setAnswers(sortByNewestAnswer(answers));
     };
     updateAnswers();
   }, [question]);
