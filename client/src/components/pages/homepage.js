@@ -26,6 +26,8 @@ const Homepage = ({
   const [user, setUser] = useContext(UserContext);
   const [results, setResults] = useState([]);
   const [page, setPage] = useState(1);
+  const start = (page - 1) * 5;
+  const end = page * 5;
 
   // fetch posts from the backend
   useEffect(() => {
@@ -113,7 +115,7 @@ const Homepage = ({
         </div>
         <div id="result-list">
           {results.length ? (
-            results.map((result) => {
+            results.slice(start,end).map((result) => {
               return (
                 <ResultListItem
                   question={result}
@@ -131,14 +133,14 @@ const Homepage = ({
       <div style={{ position: "fixed", bottom: 0, right: 0, margin: 10 }}>
         <Button
           variant="contained"
-          onClick={() => setPage(page === 0 ? page : page - 1)}
+          onClick={() => setPage(page === 1 ? 1: page - 1)}
           style={{ marginRight: 10 }}
         >
           prev
         </Button>
         <Button
           variant="contained"
-          onClick={() => setPage(results.length < 5 ? page : page + 1)}
+          onClick={() => setPage(page * 5 > results.length ? page : page + 1)}
         >
           next
         </Button>
@@ -148,46 +150,3 @@ const Homepage = ({
 };
 
 export default Homepage;
-
-/* <div className="num-questions-sortby">
-            <p>{results.length} questions</p>
-            <div style={{ flexGrow: 1 }}></div>
-            <ul className="sortby">
-              <li>
-                <button
-                  className="sort-button"
-                  id="sortby-newest"
-                  onClick={() => { 
-                    handleSortByNewestClickAll(appModel, setResults);
-                    console.log("sort by newest")
-                  }
-
-                  }
-                >
-                  Newest
-                </button>
-              </li>
-              <li>
-                <button
-                  className="sort-button"
-                  id="sortby-active"
-                  onClick={() =>
-                    handleSortByActiveClickAll(appModel, setResults)
-                  }
-                >
-                  Active
-                </button>
-              </li>
-              <li>
-                <button
-                  className="sort-button"
-                  id="sortby-unanswered"
-                  onClick={() =>
-                    handleSortByUnansweredClickAll(appModel, setResults)
-                  }
-                >
-                  Unanswered
-                </button>
-              </li>
-            </ul>
-          </div> */
