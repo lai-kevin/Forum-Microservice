@@ -22,6 +22,5 @@ export async function getQuestions(tag) {
       console.log(error);
     });
 
-  console.log(questions)
   return questions;
 }

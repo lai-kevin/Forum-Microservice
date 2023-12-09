@@ -4,6 +4,8 @@ import {
   handleSortByNewestClickSearch,
   handleSortByUnansweredClickSearch,
 } from "../utils/sorting";
+import { UserContext } from "../../contexts/user-context";
+import { useContext } from "react";
 
 /**
  * Functional component that renders a list of search results.
@@ -13,14 +15,14 @@ import {
  * @returns {JSX.Element} - JSX element representing the search results page.
  */
 const SearchResults = ({
-  appModel,
-  setAppModel,
   setCurrentPage,
   results,
   setResults,
   searchString,
   setCurrentQuestion,
 }) => {
+  const [user, setUser] = useContext(UserContext);
+  console.log(results)
   return (
     <div id="content" style={{ overflow: "auto" }}>
       <div className="page">
@@ -29,12 +31,14 @@ const SearchResults = ({
             <div className="page-info">
               <h1>Search Results</h1>
               <div style={{ flex: "1" }}></div>
-              <button
-                id="question-ask-button"
-                onClick={() => setCurrentPage("Post Question")}
-              >
-                Ask Question
-              </button>
+              {user && (
+                <button
+                  id="question-ask-button"
+                  onClick={() => setCurrentPage("Post Question")}
+                >
+                  Ask Question
+                </button>
+              )}
             </div>
             <div className="num-questions-sortby">
               <p>{results.length} questions</p>
@@ -44,13 +48,7 @@ const SearchResults = ({
                   <button
                     className="sort-button"
                     id="sortby-newest"
-                    onClick={() =>
-                      handleSortByNewestClickSearch(
-                        appModel,
-                        setResults,
-                        searchString
-                      )
-                    }
+                    onClick={() => {}}
                   >
                     Newest
                   </button>
@@ -59,13 +57,7 @@ const SearchResults = ({
                   <button
                     className="sort-button"
                     id="sortby-active"
-                    onClick={() =>
-                      handleSortByActiveClickSearch(
-                        appModel,
-                        setResults,
-                        searchString
-                      )
-                    }
+                    onClick={() => {}}
                   >
                     Active
                   </button>
@@ -74,13 +66,7 @@ const SearchResults = ({
                   <button
                     className="sort-button"
                     id="sortby-unanswered"
-                    onClick={() =>
-                      handleSortByUnansweredClickSearch(
-                        appModel,
-                        setResults,
-                        searchString
-                      )
-                    }
+                    onClick={() => {}}
                   >
                     Unanswered
                   </button>
@@ -94,8 +80,6 @@ const SearchResults = ({
             results.map((result) => {
               return (
                 <ResultListItem
-                  appModel={appModel}
-                  setModel={setAppModel}
                   question={result}
                   setCurrentPage={setCurrentPage}
                   setCurrentQuestion={setCurrentQuestion}

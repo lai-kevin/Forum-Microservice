@@ -29,7 +29,6 @@ const Header = ({
         </li>
         <li className="search-bar-container">
           <SearchBar
-            appModel={appModel}
             searchString={searchString}
             setSearchString={setSearchString}
             setCurrentPage={setCurrentPage}

@@ -1,5 +1,5 @@
+import searchQuestions from "./utils/search";
 const SearchBar = ({
-  appModel,
   searchString,
   setSearchString,
   setCurrentPage,
@@ -15,10 +15,10 @@ const SearchBar = ({
         onChange={(event) => {
           setSearchString(event.target.value);
         }}
-        onKeyDown={(event) => {
+        onKeyDown={ async (event) => {
           if (event.key === "Enter") {
             setCurrentPage("Search");
-            setSearchResults(appModel.searchQuestions(searchString));
+            setSearchResults((await searchQuestions(searchString)));
           }
         }}
         style={{border: 'solid'}}
