@@ -7,6 +7,7 @@ import { getQuestionMetaData } from "../../models/question";
 import { useState, useEffect } from "react";
 import { sortByNewestAnswer } from "../utils/sorting";
 import { QuestionMetaData } from "../../utils/metadata_generators";
+import axios from "axios";
 
 /**
  * Renders a single answer item on a question page.
@@ -70,6 +71,30 @@ const QuestionAnswersPage = ({ setCurrentPage, question }) => {
     updateAnswers();
   }, [question]);
 
+  // Increment View
+  useEffect( () => {
+    const incrementView = async () => {
+      let config = {
+        method: 'patch',
+        maxBodyLength: Infinity,
+        url: `http://localhost:8000/api/questions_v2/view?question_id=${question._id}`,
+        headers: {}
+      };
+      
+      axios.request(config)
+      .then((response) => {
+        console.log("viewed question");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      
+    };
+    incrementView();
+  }, [question]);
+
+
+
   return (
     <div>
       { answers ? (
@@ -91,7 +116,7 @@ const QuestionAnswersPage = ({ setCurrentPage, question }) => {
           </div>
           <div className="page-info">
             <p className="page-info-item">
-              <b>{question.views} views</b>
+              <b>{question.views + 1} views</b>
             </p>
             <p className="page-info-item" style={{ flexGrow: 1 }}>
               {textArray.map((text) => text)}
