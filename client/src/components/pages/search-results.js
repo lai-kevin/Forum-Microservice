@@ -5,7 +5,8 @@ import {
   handleSortByUnansweredClickSearch,
 } from "../utils/sorting";
 import { UserContext } from "../../contexts/user-context";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { Button } from "@mui/material";
 
 /**
  * Functional component that renders a list of search results.
@@ -22,7 +23,9 @@ const SearchResults = ({
   setCurrentQuestion,
 }) => {
   const [user, setUser] = useContext(UserContext);
-  console.log(results)
+  const [page, setPage] = useState(1);
+  const start = (page - 1) * 5;
+  const end = page * 5;
   return (
     <div id="content" style={{ overflow: "auto" }}>
       <div className="page">
@@ -48,7 +51,9 @@ const SearchResults = ({
                   <button
                     className="sort-button"
                     id="sortby-newest"
-                    onClick={() => {}}
+                    onClick={ async () => {
+                      await handleSortByNewestClickSearch(setResults, searchString);
+                    }}
                   >
                     Newest
                   </button>
@@ -57,7 +62,9 @@ const SearchResults = ({
                   <button
                     className="sort-button"
                     id="sortby-active"
-                    onClick={() => {}}
+                    onClick={ async () => {
+                      await handleSortByActiveClickSearch(setResults, searchString);
+                    }}
                   >
                     Active
                   </button>
@@ -66,7 +73,12 @@ const SearchResults = ({
                   <button
                     className="sort-button"
                     id="sortby-unanswered"
-                    onClick={() => {}}
+                    onClick={ async () => {
+                      await handleSortByUnansweredClickSearch(
+                        setResults,
+                        searchString
+                      );
+                    }}
                   >
                     Unanswered
                   </button>
@@ -77,7 +89,7 @@ const SearchResults = ({
         </div>
         <div id="result-list">
           {results.length ? (
-            results.map((result) => {
+            results.slice(start, end).map((result) => {
               return (
                 <ResultListItem
                   question={result}
@@ -91,6 +103,21 @@ const SearchResults = ({
             <h2 style={{ margin: "5vh" }}>No Questions Found</h2>
           )}
         </div>
+      </div>
+      <div style={{ position: "fixed", bottom: 0, right: 0, margin: 10 }}>
+        <Button
+          variant="contained"
+          onClick={() => setPage(page === 1 ? 1 : page - 1)}
+          style={{ marginRight: 10 }}
+        >
+          prev
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => setPage(page * 5 > results.length ? page : page + 1)}
+        >
+          next
+        </Button>
       </div>
     </div>
   );

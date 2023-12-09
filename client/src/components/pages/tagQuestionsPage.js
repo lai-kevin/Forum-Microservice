@@ -7,6 +7,7 @@ import {
   handleSortByUnansweredClickTag,
   handleSortByActiveClickTag,
 } from "../utils/sorting";
+import { Button } from "@mui/material";
 
 import { useState, useEffect } from "react";
 /**
@@ -22,6 +23,9 @@ import { useState, useEffect } from "react";
 const TagQuestionsPage = ({ tag, setCurrentPage, setCurrentQuestion }) => {
   const [user, setUser] = useContext(UserContext);
   const [results, setResults] = useState([]);
+  const [page, setPage] = useState(1);
+  const start = (page - 1) * 5;
+  const end = page * 5;
 
   useEffect(() => {
     const fetchTagQuestions = async () => {
@@ -91,7 +95,7 @@ const TagQuestionsPage = ({ tag, setCurrentPage, setCurrentQuestion }) => {
       </div>
       <div id="result-list">
         {results.length ? (
-          results.map((result) => {
+          results.slice(start,end).map((result) => {
             return (
               <ResultListItem
                 question={result}
@@ -104,6 +108,21 @@ const TagQuestionsPage = ({ tag, setCurrentPage, setCurrentQuestion }) => {
         ) : (
           <h2 style={{ margin: "5vh" }}>No Questions Found</h2>
         )}
+      </div>
+      <div style={{ position: "fixed", bottom: 0, right: 0, margin: 10 }}>
+        <Button
+          variant="contained"
+          onClick={() => setPage(page === 1 ? 1: page - 1)}
+          style={{ marginRight: 10 }}
+        >
+          prev
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => setPage(page * 5 > results.length ? page : page + 1)}
+        >
+          next
+        </Button>
       </div>
     </div>
   );

@@ -136,24 +136,24 @@ async function handleSortByNewestClickAll(setResults) {
 }
 
 // Search sortby handlers
-function handleSortByUnansweredClickSearch(setResults, searchString) {
-  let results = searchQuestions(searchString);
+async function handleSortByUnansweredClickSearch(setResults, searchString) {
+  let results = await searchQuestions(searchString);
   setResults(sortByUnanswered(results));
 }
 
-function handleSortByActiveClickSearch(setResults, searchString) {
-  let results = searchQuestions(searchString);
+async function handleSortByActiveClickSearch(setResults, searchString) {
+  let results = await searchQuestions(searchString);
   setResults(sortByActive(results));
 }
 
-function handleSortByNewestClickSearch(setResults, searchString) {
-  let results = searchQuestions(searchString);
+async function handleSortByNewestClickSearch(setResults, searchString) {
+  let results = await searchQuestions(searchString);
   setResults(sortByNewestQuestion(results));
 }
 
 //Sort click handlers
-function handleSortByUnansweredClickTag(setResults, tag) {
-  let results = searchQuestions(`[${tag.name.toLowerCase()}]`);
+async  function handleSortByUnansweredClickTag(setResults, tag) {
+  let results = await searchQuestions(`[${tag.name.toLowerCase()}]`);
   console.log(results);
   setResults(sortByUnanswered(results));
 }
