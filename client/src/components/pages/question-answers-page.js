@@ -9,6 +9,7 @@ import { sortByNewestAnswer } from "../utils/sorting";
 import { QuestionMetaData } from "../../utils/metadata_generators";
 import axios from "axios";
 import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 /**
  * Renders a single tag item.
  *
@@ -57,7 +58,12 @@ const AnswerResultListItem = ({ answer }) => {
   );
 };
 
-const QuestionAnswersPage = ({ setCurrentPage, question }) => {
+const QuestionAnswersPage = ({
+  setCurrentPage,
+  question,
+  setCurrentAnswer,
+}) => {
+  const navi = useNavigate();
   const [user, setUser] = useContext(UserContext);
   const [page, setPage] = useState(1);
   const start = (page - 1) * 5;
@@ -87,20 +93,21 @@ const QuestionAnswersPage = ({ setCurrentPage, question }) => {
   useEffect(() => {
     const updateAnswers = async () => {
       let config = {
-        method: 'get',
+        method: "get",
         maxBodyLength: Infinity,
         url: `http://localhost:8000/api/answers_v2?question_id=${question._id}`,
-        headers: {}
+        headers: {},
       };
-      
+
       let answers = [];
-      await axios.request(config)
-      .then((response) => {
-        answers = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      await axios
+        .request(config)
+        .then((response) => {
+          answers = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       setAnswers(sortByNewestAnswer(answers));
     };
     updateAnswers();
@@ -156,13 +163,30 @@ const QuestionAnswersPage = ({ setCurrentPage, question }) => {
               </p>
               <QuestionMetaData question={question} />
             </div>
-            <div className="result-item-tag-list" style={{justifyContent:"right"}}>
+            <div
+              className="result-item-tag-list"
+              style={{ justifyContent: "right" }}
+            >
               <h4>Tags: </h4>
               {question.tags.map((tag) => tagsListItem(tag))}
             </div>
+            <div>
+              {user && (
+                <button
+                  className="blue-button"
+                  id="question-answer-button"
+                  onClick={() => {
+                    setCurrentAnswer(undefined);
+                    setCurrentPage("Post Comment");
+                  }}
+                >
+                  Post Comment
+                </button>
+              )}
+            </div>
           </div>
           <div id="result-list">
-            {answers.slice(start,end).map((answer) => (
+            {answers.slice(start, end).map((answer) => (
               <AnswerResultListItem answer={answer} key={`${answer._id}`} />
             ))}
           </div>
@@ -182,7 +206,7 @@ const QuestionAnswersPage = ({ setCurrentPage, question }) => {
       <div style={{ position: "fixed", bottom: 0, right: 0, margin: 10 }}>
         <Button
           variant="contained"
-          onClick={() => setPage(page === 1 ? 1: page - 1)}
+          onClick={() => setPage(page === 1 ? 1 : page - 1)}
           style={{ marginRight: 10 }}
         >
           prev

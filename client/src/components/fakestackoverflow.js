@@ -26,7 +26,7 @@ const FakeStackOverflow = () => {
   const [searchResults, setSearchResults] = useState([]); // For search result page
   const [tag, setTag] = useState(""); // For Tag Questions page
   const [currentQuestion, setCurrentQuestion] = useState(undefined); //For question answers page and post answer page. Stores a qid.
-
+  const [currentAnswer, setCurrentAnswer] = useState(undefined); //For post comment page. Stores an aid.
   var currentPageComponent = <div></div>;
 
   switch (currentPage) {
@@ -64,6 +64,7 @@ const FakeStackOverflow = () => {
         <QuestionAnswersPage
           setCurrentPage={setCurrentPage}
           question={currentQuestion}
+          setCurrentAnswer={setCurrentAnswer}
         />
       );
       break;
@@ -97,6 +98,7 @@ const FakeStackOverflow = () => {
         <PostCommentPage
           setCurrentPage={setCurrentPage}
           currentQuestion={currentQuestion}
+          currentAnswer={currentAnswer}
         />
       );
       break;
