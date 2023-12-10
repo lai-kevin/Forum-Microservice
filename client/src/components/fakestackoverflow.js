@@ -11,7 +11,7 @@ import PostAnswerPage from "./pages/post-answer-page.js";
 import AccountCreationPage from "./pages/account-creation.jsx";
 import LoginPage from "./pages/login-page.jsx";
 import { UserContext } from "../contexts/user-context.js";
-
+import PostCommentPage from "./pages/post-comment-page.jsx";
 /**
  * The `FakeStackOverflow` function is a React component that represents a Stack Overflow-like application.
  * It uses state hooks to manage the application's data and current page. The function returns JSX elements that render different components based on the current page state.
@@ -20,14 +20,13 @@ import { UserContext } from "../contexts/user-context.js";
  */
 const FakeStackOverflow = () => {
   const [user, setUser] = useContext(UserContext);
-  const [currentPage, setCurrentPage] = useState("Homepage");
+  const [currentPage, setCurrentPage] = useState("Post Comment");
   const [searchString, setSearchString] = useState("");
 
   const [searchResults, setSearchResults] = useState([]); // For search result page
   const [tag, setTag] = useState(""); // For Tag Questions page
   const [currentQuestion, setCurrentQuestion] = useState(undefined); //For question answers page and post answer page. Stores a qid.
 
-  
   var currentPageComponent = <div></div>;
 
   switch (currentPage) {
@@ -92,6 +91,14 @@ const FakeStackOverflow = () => {
       break;
     case "Login":
       currentPageComponent = <LoginPage setCurrentPage={setCurrentPage} />;
+      break;
+    case "Post Comment":
+      currentPageComponent = (
+        <PostCommentPage
+          setCurrentPage={setCurrentPage}
+          currentQuestion={currentQuestion}
+        />
+      );
       break;
     default:
       // Default case should not be reached
