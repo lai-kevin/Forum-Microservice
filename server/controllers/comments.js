@@ -25,6 +25,7 @@ commentsRouter.post("/", async (req, res) => {
         { $push: { comments: newComment._id } },
         { new: true }
       );
+      console.log(update)
       if (update) res.status(200).json({ message: "Successfully saved comment", comment: savedComment });
       return;
     }

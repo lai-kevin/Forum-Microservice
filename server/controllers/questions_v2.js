@@ -16,23 +16,25 @@ questionsRouter2.post("/", async (req, res) => {
 
     // Check if tags exist in database, if not, create them
     let tags = [];
-    tags = await Promise.all(tag_strings.map(async (tag_string) => {
-      const tag = await Tag.findOne({ name: tag_string });
-      if (tag) {
-       return tag.id
-      } else {
-        const newTag = new Tag({
-          name: tag_string,
-          created_by: req.session.user._id,
-        });
-        const savedTag = await newTag.save();
-        if (!savedTag) {
-          return res.status(400).json({ error: "Could not save tag" });
+    tags = await Promise.all(
+      tag_strings.map(async (tag_string) => {
+        const tag = await Tag.findOne({ name: tag_string });
+        if (tag) {
+          return tag.id;
+        } else {
+          const newTag = new Tag({
+            name: tag_string,
+            created_by: req.session.user._id,
+          });
+          const savedTag = await newTag.save();
+          if (!savedTag) {
+            return res.status(400).json({ error: "Could not save tag" });
+          }
+          console.log(savedTag);
+          return savedTag.id;
         }
-        console.log(savedTag)
-        return savedTag.id
-      }
-    }));
+      })
+    );
 
     console.log(tags);
     const question = new Question({
@@ -67,6 +69,13 @@ questionsRouter2.get("/", async (req, res) => {
         "answers",
         "asked_by",
         "comments",
+        {
+          path: "comments",
+          populate: {
+            path: "posted_by",
+            model: "User",
+          },
+        },
       ]);
       if (!question) {
         return res.status(404).json({ error: "Question not found" });
@@ -81,6 +90,13 @@ questionsRouter2.get("/", async (req, res) => {
         "answers",
         "asked_by",
         "comments",
+        {
+          path: "comments",
+          populate: {
+            path: "posted_by",
+            model: "User",
+          },
+        },
       ]);
       return res.status(200).json(questions);
     }
@@ -88,7 +104,19 @@ questionsRouter2.get("/", async (req, res) => {
     // If no query parameters are present, return all questions
     let questions = await Question.find({})
       .sort({ posted_time: -1 })
-      .populate(["tags", "answers", "asked_by", "comments"]);
+      .populate([
+        "tags",
+        "answers",
+        "asked_by",
+        "comments",
+        {
+          path: "comments",
+          populate: {
+            path: "posted_by",
+            model: "User",
+          },
+        },
+      ]);
     return res.status(200).json(questions);
   } catch (error) {
     console.log(error);
@@ -149,7 +177,11 @@ questionsRouter2.delete("/", async (req, res) => {
 questionsRouter2.patch("/view", async (req, res) => {
   try {
     const { question_id } = req.query;
-    const question = await Question.findOneAndUpdate({ _id: question_id }, { $inc: { views: 1 } }, { new: true });
+    const question = await Question.findOneAndUpdate(
+      { _id: question_id },
+      { $inc: { views: 1 } },
+      { new: true }
+    );
     if (!question) {
       return res.status(404).json({ error: "Question not found" });
     }

@@ -10,6 +10,18 @@ import { QuestionMetaData } from "../../utils/metadata_generators";
 import axios from "axios";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import { Divider } from "@mui/material";
+
+function CommentListItem({comment}) {
+  console.log(comment)
+  return (
+    <div style={{ display: "flex", border: "dotted" }}>
+      <p className="answer-text">{comment.text}</p>
+      <p className="answer-text">comment by: {comment.posted_by.username}</p>
+    </div>
+  );
+}
+
 /**
  * Renders a single tag item.
  *
@@ -183,6 +195,10 @@ const QuestionAnswersPage = ({
                   Post Comment
                 </button>
               )}
+            </div>
+            <div>
+              <h3>Comments</h3>
+              {question.comments.map((comment) => <CommentListItem key={comment._id} comment={comment} />)}
             </div>
           </div>
           <div id="result-list">
