@@ -33,7 +33,7 @@ export function getAnswerMetaData(answer) {
   } else {
     //<username> answered  <Month><day> at <hh:min>.
     var hourAndMinutes = answerDateArr[4].split(":").slice(0, 2).join(":");
-    metaDataString = <p><span style={{color: "green"}}>{answer.ans_by}</span> answered {answerDateArr[1]} {answerDateArr[2]} at {hourAndMinutes}</p>;
+    metaDataString = <p><span style={{color: "green"}}>{answer.ans_by.username}</span> answered {answerDateArr[1]} {answerDateArr[2]} at {hourAndMinutes}</p>;
   }
   return metaDataString;
 }
