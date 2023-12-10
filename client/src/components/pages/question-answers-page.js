@@ -18,8 +18,7 @@ function Comments({ comments }) {
   const end = page * 3;
 
   // Sort comments by post_time
-  const sortedComments = comments.sort((a, b) => a.post_time - b.post_time);
-
+  const sortedComments = comments.sort((a, b) => new Date(b.post_time) - new Date(a.post_time));
   return (
     <div>
       {sortedComments.slice(start, end).map((comment) => (
