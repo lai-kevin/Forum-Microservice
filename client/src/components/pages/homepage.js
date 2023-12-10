@@ -140,7 +140,7 @@ const Homepage = ({
         </Button>
         <Button
           variant="contained"
-          onClick={() => setPage(page * 5 > results.length ? page : page + 1)}
+          onClick={() => setPage(page * 5 >= results.length ? page : page + 1)}
         >
           next
         </Button>

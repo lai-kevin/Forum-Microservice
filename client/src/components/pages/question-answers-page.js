@@ -12,8 +12,42 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { Divider } from "@mui/material";
 
-function CommentListItem({comment}) {
-  console.log(comment)
+function Comments({ comments }) {
+  const [page, setPage] = useState(1);
+  const start = (page - 1) * 3;
+  const end = page * 3;
+
+  // Sort comments by post_time
+  const sortedComments = comments.sort((a, b) => a.post_time - b.post_time);
+
+  return (
+    <div>
+      {sortedComments.slice(start, end).map((comment) => (
+        <CommentListItem key={comment._id} comment={comment} />
+      ))}
+      <div style={{ margin: 10 }}>
+        <Button
+          variant="contained"
+          onClick={() => setPage(page === 1 ? 1 : page - 1)}
+          style={{ marginRight: 10 }}
+        >
+          prev
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() =>
+            setPage(page * 3 >= sortedComments.length ? page : page + 1)
+          }
+        >
+          next
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function CommentListItem({ comment }) {
+  console.log(comment);
   return (
     <div style={{ display: "flex", border: "dotted" }}>
       <p className="answer-text">{comment.text}</p>
@@ -198,7 +232,7 @@ const QuestionAnswersPage = ({
             </div>
             <div>
               <h3>Comments</h3>
-              {question.comments.map((comment) => <CommentListItem key={comment._id} comment={comment} />)}
+              <Comments comments={question.comments} />
             </div>
           </div>
           <div id="result-list">
@@ -229,7 +263,7 @@ const QuestionAnswersPage = ({
         </Button>
         <Button
           variant="contained"
-          onClick={() => setPage(page * 5 > answers.length ? page : page + 1)}
+          onClick={() => setPage(page * 5 >= answers.length ? page : page + 1)}
         >
           next
         </Button>

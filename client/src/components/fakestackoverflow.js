@@ -20,7 +20,7 @@ import PostCommentPage from "./pages/post-comment-page.jsx";
  */
 const FakeStackOverflow = () => {
   const [user, setUser] = useContext(UserContext);
-  const [currentPage, setCurrentPage] = useState("Post Comment");
+  const [currentPage, setCurrentPage] = useState("Homepage");
   const [searchString, setSearchString] = useState("");
 
   const [searchResults, setSearchResults] = useState([]); // For search result page
