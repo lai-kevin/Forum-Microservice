@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import { sortByNewestAnswer } from "../utils/sorting";
 import { QuestionMetaData } from "../../utils/metadata_generators";
 import axios from "axios";
-
+import Button from "@mui/material/Button";
 /**
  * Renders a single tag item.
  *
@@ -59,6 +59,10 @@ const AnswerResultListItem = ({ answer }) => {
 
 const QuestionAnswersPage = ({ setCurrentPage, question }) => {
   const [user, setUser] = useContext(UserContext);
+  const [page, setPage] = useState(1);
+  const start = (page - 1) * 5;
+  const end = page * 5;
+
   var questionText = question.text;
   const hyperlinkRegex = /\[[^\]]+\]\([^)]+\)/g;
   var textArray = questionText.split(hyperlinkRegex);
@@ -158,7 +162,7 @@ const QuestionAnswersPage = ({ setCurrentPage, question }) => {
             </div>
           </div>
           <div id="result-list">
-            {answers.map((answer) => (
+            {answers.slice(start,end).map((answer) => (
               <AnswerResultListItem answer={answer} key={`${answer._id}`} />
             ))}
           </div>
@@ -175,6 +179,21 @@ const QuestionAnswersPage = ({ setCurrentPage, question }) => {
       ) : (
         <div></div>
       )}
+      <div style={{ position: "fixed", bottom: 0, right: 0, margin: 10 }}>
+        <Button
+          variant="contained"
+          onClick={() => setPage(page === 1 ? 1: page - 1)}
+          style={{ marginRight: 10 }}
+        >
+          prev
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => setPage(page * 5 > answers.length ? page : page + 1)}
+        >
+          next
+        </Button>
+      </div>
     </div>
   );
 };
