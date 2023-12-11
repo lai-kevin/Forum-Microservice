@@ -134,6 +134,7 @@ const ModifyQuestionPage = ({ setShowModifyScreen, question }) => {
           type="text"
           className="single-line-textbox"
           id="question-title-input"
+          defaultValue={question.title}
           required
           minLength="1"
           maxLength="50"
@@ -148,6 +149,7 @@ const ModifyQuestionPage = ({ setShowModifyScreen, question }) => {
           type="text"
           className="single-line-textbox"
           id="question-sumary-input"
+          defaultValue={question.summary}
           required
           maxLength="140"
           onChange={(event) => setQuestionSummary(event.target.value)}
@@ -161,6 +163,7 @@ const ModifyQuestionPage = ({ setShowModifyScreen, question }) => {
         <textarea
           className="multi-line-textbox"
           id="question-text-input"
+          defaultValue={question.text}
           required
           onChange={(event) => setQuestionText(event.target.value)}
         ></textarea>
@@ -174,6 +177,7 @@ const ModifyQuestionPage = ({ setShowModifyScreen, question }) => {
           type="text"
           className="single-line-textbox"
           id="question-tags-input"
+          defaultValue={question.tags.map((tag) => tag.name).join(" ")}
           onChange={(event) => setTags(event.target.value)}
         />
         <TagsErrorMessage tagsError={tagsError} />
