@@ -23,9 +23,9 @@ const TagsErrorMessage = ({ tagsError }) => {
  * @returns {JSX.Element} The rendered form component.
  */
 const ModifyQuestionPage = ({ setShowModifyScreen, question }) => {
-  const [questionTitle, setQuestionTitle] = useState("");
-  const [questionText, setQuestionText] = useState("");
-  const [tags, setTags] = useState("");
+  const [questionTitle, setQuestionTitle] = useState(question.title);
+  const [questionText, setQuestionText] = useState(question.text);
+  const [tags, setTags] = useState(question.tags.map((tag) => tag.name).join(" "));
   const [tagsError, setTagsError] = useState("");
   const [hyperlinkError, setHyperlinkError] = useState("");
   const [questionSummary, setQuestionSummary] = useState("");
