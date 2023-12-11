@@ -59,8 +59,14 @@ const questionSchema = new mongoose.Schema({
     default: 0,
   },
   votes: {
-    type: Number,
-    default: 0,
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "User",
+    default: [],
+  },
+  downvotes: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "User",
+    default: [],
   },
 });
 

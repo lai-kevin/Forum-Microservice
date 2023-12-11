@@ -176,6 +176,9 @@ questionsRouter2.delete("/", async (req, res) => {
 
 questionsRouter2.patch("/view", async (req, res) => {
   try {
+    if (!req.session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
     const { question_id } = req.query;
     const question = await Question.findOneAndUpdate(
       { _id: question_id },
@@ -186,6 +189,51 @@ questionsRouter2.patch("/view", async (req, res) => {
       return res.status(404).json({ error: "Question not found" });
     }
     return res.status(200).json({ messsage: "Success", views: question.views });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+questionsRouter2.patch("/upvote", async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    const { question_id } = req.query;
+    const question = await Question.findOneAndUpdate(
+      { _id: question_id },
+      { $pull: { downvotes: req.session.user._id }, $addToSet: { votes: req.session.user._id } },
+      { new: true }
+      );
+    
+    if (!question) {
+      return res.status(404).json({ error: "Question not found" });
+    }
+    console.log(question);
+    return res.status(200).json({ messsage: "Success", votes: question.votes.length - question.downvotes.length });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+questionsRouter2.patch("/downvote", async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    const { question_id } = req.query;
+    const question = await Question.findOneAndUpdate(
+      { _id: question_id },
+      { $pull: { votes: req.session.user._id }, $addToSet: { downvotes: req.session.user._id } },
+      { new: true }
+    );
+
+    if (!question) {
+      return res.status(404).json({ error: "Question not found" });
+    }
+    return res.status(200).json({ messsage: "Success", votes: question.votes.length - question.downvotes.length });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal server error" });

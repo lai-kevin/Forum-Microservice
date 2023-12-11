@@ -235,6 +235,7 @@ const QuestionAnswersPage = ({
         maxBodyLength: Infinity,
         url: `http://localhost:8000/api/questions_v2/view?question_id=${question._id}`,
         headers: {},
+        withCredentials: true,
       };
 
       axios
