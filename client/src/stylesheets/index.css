@@ -171,7 +171,7 @@ background-color: white;
 padding-left: 2vh; 
 padding-right: 2vh; 
 margin-top: 3vh;
-border-style: dotted;
+border-style: solid;
 border-top: none;
 border-right: none;
 border-left: none;
@@ -206,15 +206,20 @@ display: inline-flex;
 margin-top: 0;
 }
 
+.result-item-with-comments {
+  display: flex;
+  flex-direction: column;
+  border-style: dotted;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+}
+
 .result-item {
 display: flex;
 flex-direction: row;
 padding-left: 2vh; 
 padding-right: 2vh; 
-border-style: dotted;
-border-top: none;
-border-right: none;
-border-left: none;
 margin-top: 2vh;
 margin-bottom: 2vh;
 }

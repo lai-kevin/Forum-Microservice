@@ -18,7 +18,14 @@ function Comments({ comments }) {
   const end = page * 3;
 
   // Sort comments by post_time
-  const sortedComments = comments.sort((a, b) => new Date(b.post_time) - new Date(a.post_time));
+  const sortedComments = comments.sort(
+    (a, b) => new Date(b.post_time) - new Date(a.post_time)
+  );
+
+  if (sortedComments.length === 0) {
+    return <div>No comments</div>;
+  }
+
   return (
     <div>
       {sortedComments.slice(start, end).map((comment) => (
@@ -96,9 +103,25 @@ const AnswerResultListItem = ({ answer }) => {
     textArray = textArray.flatMap((text) => [text, hyperlinkHTML[i++]]);
   }
   return (
-    <div className="result-item">
-      <p className="answer-text">{textArray.map((text) => text)}</p>
-      {getAnswerMetaData(answer)}
+    <div
+      style={{
+        justifyContent: "center",
+        borderStyle: "dotted",
+        borderTop: "none",
+        borderRight: "none",
+        borderLeft: "none",
+      }}
+    >
+      <div className="result-item">
+        <p className="answer-text">{textArray.map((text) => text)}</p>
+        {getAnswerMetaData(answer)}
+      </div>
+      <div style={{margin: 10}}>
+        <div>
+          <h4>Answer Comments</h4>
+          <Comments comments={answer.comments} />
+        </div>
+      </div>
     </div>
   );
 };
@@ -230,11 +253,14 @@ const QuestionAnswersPage = ({
               )}
             </div>
             <div>
-              <h3>Comments</h3>
+              <h3>Question Comments</h3>
               <Comments comments={question.comments} />
             </div>
           </div>
-          <div id="result-list">
+          <div>
+            <h1 style={{fontSize: 50, textDecoration: "underline"}}>Answers</h1>
+          </div>
+          <div>
             {answers.slice(start, end).map((answer) => (
               <AnswerResultListItem answer={answer} key={`${answer._id}`} />
             ))}
