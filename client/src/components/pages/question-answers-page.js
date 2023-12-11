@@ -55,7 +55,11 @@ function Comments({ question, answer }) {
     return (
       <div>
         <div>No comments</div>
-        <PostCommentPage currentQuestion={question} currentAnswer={answer} setComments={setComments}/>
+        <PostCommentPage
+          currentQuestion={question}
+          currentAnswer={answer}
+          setComments={setComments}
+        />
       </div>
     );
   }
@@ -82,7 +86,11 @@ function Comments({ question, answer }) {
           next
         </Button>
       </div>
-      <PostCommentPage currentQuestion={question} currentAnswer={answer} setComments={setComments}/>
+      <PostCommentPage
+        currentQuestion={question}
+        currentAnswer={answer}
+        setComments={setComments}
+      />
     </div>
   );
 }
@@ -180,8 +188,50 @@ const QuestionAnswersPage = ({
   const navi = useNavigate();
   const [user, setUser] = useContext(UserContext);
   const [page, setPage] = useState(1);
+  const [votes, setVotes] = useState(question.votes.length);
   const start = (page - 1) * 5;
   const end = page * 5;
+
+  const handleUpvote = async () => {
+    let config = {
+      method: "patch",
+      maxBodyLength: Infinity,
+      url: `http://localhost:8000/api/questions_v2/upvote/?question_id=${question._id}`,
+      headers: {},
+      withCredentials: true,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response);
+        setVotes(response.data.votes);
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleDownvote = async () => {
+    let config = {
+      method: "patch",
+      maxBodyLength: Infinity,
+      url: `http://localhost:8000/api/questions_v2/downvote/?question_id=${question._id}`,
+      headers: {},
+      withCredentials: true,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response);
+        setVotes(response.data.votes);
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   var questionText = question.text;
   const hyperlinkRegex = /\[[^\]]+\]\([^)]+\)/g;
@@ -259,6 +309,9 @@ const QuestionAnswersPage = ({
               <p className="page-info-item">
                 <b>{answers.length} answers</b>
               </p>
+              <p className="page-info-item">
+                <b>{votes} votes</b>
+              </p>
               <h2 style={{ flexGrow: 1 }}>{question.title}</h2>
               {user && (
                 <button
@@ -285,8 +338,13 @@ const QuestionAnswersPage = ({
               <h4>Tags: </h4>
               {question.tags.map((tag) => tagsListItem(tag))}
             </div>
-            <div>
-            </div>
+            {user && (
+              <div>
+                <Button onClick={() => handleUpvote()}>Upvote</Button>
+                <Button onClick={() => handleDownvote()}>Downvote</Button>
+              </div>
+            )}
+            <div></div>
             <div>
               <h3>Question Comments</h3>
               <Comments question={question} answer={null} />
