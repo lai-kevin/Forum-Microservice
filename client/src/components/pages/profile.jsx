@@ -20,9 +20,10 @@ const UserInfo = ({ user }) => {
   );
 };
 
-const UserQuestions = ({ user, setShowModifyScreen, setQuestion }) => {
+const UserQuestions = ({ user, setShowModifyScreen, setQuestion , showModifyScreen }) => {
   const [questions, setQuestions] = useState([]);
-  useEffect(() => {
+
+  const fetchQuestions = async () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
@@ -39,6 +40,18 @@ const UserQuestions = ({ user, setShowModifyScreen, setQuestion }) => {
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  useEffect(() => {
+    fetchQuestions();
+
+    const interval = setInterval(() => {
+      fetchQuestions();
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   return (
@@ -89,7 +102,7 @@ const Profile = ({ setCurrentPage }) => {
   switch (display) {
     case "questions":
       list = (
-        <UserQuestions user={user} setShowModifyScreen={setShowModifyScreen} setQuestion={setQuestion}/>
+        <UserQuestions user={user} setShowModifyScreen={setShowModifyScreen} setQuestion={setQuestion} showModifyScreen={showModifyScreen}/>
       );
       break;
     case "answers":
