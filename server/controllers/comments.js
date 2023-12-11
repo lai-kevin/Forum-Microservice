@@ -167,4 +167,38 @@ commentsRouter.delete("/", async (req, res) => {
   }
 });
 
+// Upvote a comment
+commentsRouter.patch("/upvote", async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    // Update question votes
+    const { comment_id } = req.query;
+    const comment = await Comment.findOneAndUpdate(
+      { _id: comment_id },
+      {
+        $addToSet: { votes: req.session.user._id },
+      },
+      { new: true }
+    );
+
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    console.log(comment);
+    return res
+      .status(200)
+      .json({
+        messsage: "Success",
+        votes: comment.votes.length,
+      });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = commentsRouter;

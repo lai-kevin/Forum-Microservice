@@ -16,11 +16,6 @@ const commentSchema = mongoose.Schema({
     ref: "User",
     default: [],
   },
-  downvotes: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "User",
-    default: [],
-  },
   post_time: {
     type: Date,
     default: Date.now,

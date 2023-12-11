@@ -106,11 +106,38 @@ function Comments({ question, answer }) {
  * @returns {JSX.Element} The rendered comment item.
  */
 function CommentListItem({ comment }) {
-  console.log(comment);
+  const [user, setUser] = useContext(UserContext);
+  const [votes, setVotes] = useState(comment.votes.length);
+
+  const handleUpvote = async () => {
+    let config = {
+      method: 'patch',
+      maxBodyLength: Infinity,
+      url: `http://localhost:8000/api/comments/upvote?comment_id=${comment._id}`,
+      headers: {},
+      withCredentials: true,
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      setVotes(response.data.votes);
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+    
+  }
   return (
     <div style={{ display: "flex", border: "dotted" }}>
       <p className="answer-text">{comment.text}</p>
       <p className="answer-text">comment by: {comment.posted_by.username}</p>
+      <p className="answer-text">votes: {votes}</p>
+      {user && (
+        <div>
+          <Button style={{margin: 10}} onClick={() => handleUpvote()}>Upvote</Button>
+        </div>
+      )}
     </div>
   );
 }
