@@ -20,6 +20,8 @@ const LoginPage = () => {
     setPassword(event.target.value);
   };
 
+
+  
   const handleLogin = () => {
     setCredentialsValid(true);
     let data = JSON.stringify({
@@ -49,6 +51,12 @@ const LoginPage = () => {
         setCredentialsValid(false);
         console.log(error);
       });
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleLogin();
+    }
   };
 
   return (
@@ -89,9 +97,11 @@ const LoginPage = () => {
           id="outlined-basic"
           label="Password"
           variant="outlined"
+          type="password"
           required={true}
           value={password}
           onChange={handlePasswordChange}
+          onKeyDown={handleKeyDown} // Add this line
           sx={{ margin: "10px 0" }}
         />
         {!credentialsValid && (
