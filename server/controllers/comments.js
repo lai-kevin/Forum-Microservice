@@ -176,25 +176,40 @@ commentsRouter.patch("/upvote", async (req, res) => {
 
     // Update question votes
     const { comment_id } = req.query;
-    const comment = await Comment.findOneAndUpdate(
-      { _id: comment_id },
-      {
-        $addToSet: { votes: req.session.user._id },
-      },
-      { new: true }
-    );
+    let comment = await Comment.findOne({ _id: comment_id });
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    // Remove user ID from votes set if already present
+    if (comment.votes.includes(req.session.user._id)) {
+      comment = await Comment.findOneAndUpdate(
+        { _id: comment_id },
+        {
+          $pull: { votes: req.session.user._id },
+        },
+        { new: true }
+      );
+    } else {
+      // Add user ID to votes set if not already present
+      comment = await Comment.findOneAndUpdate(
+        { _id: comment_id },
+        {
+          $addToSet: { votes: req.session.user._id },
+        },
+        { new: true }
+      );
+    }
 
     if (!comment) {
       return res.status(404).json({ error: "Comment not found" });
     }
 
     console.log(comment);
-    return res
-      .status(200)
-      .json({
-        messsage: "Success",
-        votes: comment.votes.length,
-      });
+    return res.status(200).json({
+      messsage: "Success",
+      votes: comment.votes.length,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal server error" });
