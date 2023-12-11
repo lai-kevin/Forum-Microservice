@@ -197,9 +197,11 @@ questionsRouter2.patch("/view", async (req, res) => {
 
 questionsRouter2.patch("/upvote", async (req, res) => {
   try {
-    if (!req.session.user) {
+    if (!req.session.user  || req.session.user.reputation < 50) {
       return res.status(401).json({ error: "Unauthorized" });
     }
+
+    // Update question votes
     const { question_id } = req.query;
     const question = await Question.findOneAndUpdate(
       { _id: question_id },
@@ -210,6 +212,14 @@ questionsRouter2.patch("/upvote", async (req, res) => {
     if (!question) {
       return res.status(404).json({ error: "Question not found" });
     }
+
+    // Increment user repuation
+    const user = await User.findOneAndUpdate(
+      { _id: req.session.user._id },
+      { $inc: { reputation: 5 } },
+      { new: true }
+    );
+
     console.log(question);
     return res.status(200).json({ messsage: "Success", votes: question.votes.length - question.downvotes.length });
   } catch (error) {
@@ -220,9 +230,10 @@ questionsRouter2.patch("/upvote", async (req, res) => {
 
 questionsRouter2.patch("/downvote", async (req, res) => {
   try {
-    if (!req.session.user) {
+    if (!req.session.user || req.session.user.reputation < 50) {
       return res.status(401).json({ error: "Unauthorized" });
     }
+    // Update question votes
     const { question_id } = req.query;
     const question = await Question.findOneAndUpdate(
       { _id: question_id },
@@ -233,6 +244,14 @@ questionsRouter2.patch("/downvote", async (req, res) => {
     if (!question) {
       return res.status(404).json({ error: "Question not found" });
     }
+
+    // Decrement user reputation
+    const user = await User.findOneAndUpdate(
+      { _id: req.session.user._id },
+      { $inc: { reputation: -10 } },
+      { new: true }
+    );
+
     return res.status(200).json({ messsage: "Success", votes: question.votes.length - question.downvotes.length });
   } catch (error) {
     console.log(error);
