@@ -11,6 +11,11 @@ const answerSchema = mongoose.Schema({
     ref: "User",
     default: [],
   },
+  downvotes: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "User",
+    default: [],
+  },
   ans_by: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

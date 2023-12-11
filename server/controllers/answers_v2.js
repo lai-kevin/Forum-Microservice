@@ -85,4 +85,68 @@ answersRouter2.delete("/", async (req, res) => {
   }
 });
 
+answersRouter2.patch("/upvote", async (req, res) => {
+  try {
+    if (!req.session.user  || req.session.user.reputation < 50) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    // Update question votes
+    const { answer_id } = req.query;
+    const answer = await Answer.findOneAndUpdate(
+      { _id: answer_id },
+      { $pull: { downvotes: req.session.user._id }, $addToSet: { votes: req.session.user._id } },
+      { new: true }
+      );
+    
+    if (!answer) {
+      return res.status(404).json({ error: "Answer not found" });
+    }
+
+    // Increment user repuation
+    const user = await User.findOneAndUpdate(
+      { _id: req.session.user._id },
+      { $inc: { reputation: 5 } },
+      { new: true }
+    );
+
+    console.log(answer);
+    return res.status(200).json({ messsage: "Success", votes: answer.votes.length - answer.downvotes.length });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+answersRouter2.patch("/downvote", async (req, res) => {
+  try {
+    if (!req.session.user || req.session.user.reputation < 50) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    // Update answer votes
+    const { answer_id } = req.query;
+    const answer = await Answer.findOneAndUpdate(
+      { _id: answer_id },
+      { $pull: { votes: req.session.user._id }, $addToSet: { downvotes: req.session.user._id } },
+      { new: true }
+    );
+
+    if (!answer) {
+      return res.status(404).json({ error: "Answer not found" });
+    }
+
+    // Decrement user reputation
+    const user = await User.findOneAndUpdate(
+      { _id: req.session.user._id },
+      { $inc: { reputation: -10 } },
+      { new: true }
+    );
+
+    return res.status(200).json({ messsage: "Success", votes: answer.votes.length - answer.downvotes.length });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = answersRouter2;
