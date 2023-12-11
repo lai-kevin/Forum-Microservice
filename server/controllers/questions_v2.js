@@ -198,31 +198,59 @@ questionsRouter2.patch("/view", async (req, res) => {
 
 questionsRouter2.patch("/upvote", async (req, res) => {
   try {
-    if (!req.session.user  || req.session.user.reputation < 50) {
+    if (!req.session.user || req.session.user.reputation < 50) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
     // Update question votes
     const { question_id } = req.query;
-    const question = await Question.findOneAndUpdate(
-      { _id: question_id },
-      { $pull: { downvotes: req.session.user._id }, $addToSet: { votes: req.session.user._id } },
-      { new: true }
+    let question = await Question.findOne({ _id: question_id });
+    if (!question) {
+      return res.status(404).json({ error: "Question not found" });
+    }
+    // Remove user ID from downvotes set if already present
+    if (question.votes.includes(req.session.user._id)) {
+      question = await Question.findOneAndUpdate(
+        { _id: question_id },
+        { $pull: { votes: req.session.user._id } },
+        { new: true }
       );
-    
+      if (question) {
+        // Increment user repuation
+        const user = await User.findOneAndUpdate(
+          { _id: req.session.user._id },
+          { $inc: { reputation: -5 } },
+          { new: true }
+        );
+      }
+    } else {
+      // Add user ID to votes set if not already present
+      question = await Question.findOneAndUpdate(
+        { _id: question_id },
+        {
+          $pull: { downvotes: req.session.user._id },
+          $addToSet: { votes: req.session.user._id },
+        },
+        { new: true }
+      );
+      if (question) {
+        // Increment user repuation
+        const user = await User.findOneAndUpdate(
+          { _id: req.session.user._id },
+          { $inc: { reputation: 5 } },
+          { new: true }
+        );
+      }
+    }
+
     if (!question) {
       return res.status(404).json({ error: "Question not found" });
     }
 
-    // Increment user repuation
-    const user = await User.findOneAndUpdate(
-      { _id: req.session.user._id },
-      { $inc: { reputation: 5 } },
-      { new: true }
-    );
-
-    console.log(question);
-    return res.status(200).json({ messsage: "Success", votes: question.votes.length - question.downvotes.length });
+    return res.status(200).json({
+      messsage: "Success",
+      votes: question.votes.length - question.downvotes.length,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal server error" });
@@ -236,24 +264,54 @@ questionsRouter2.patch("/downvote", async (req, res) => {
     }
     // Update question votes
     const { question_id } = req.query;
-    const question = await Question.findOneAndUpdate(
-      { _id: question_id },
-      { $pull: { votes: req.session.user._id }, $addToSet: { downvotes: req.session.user._id } },
-      { new: true }
-    );
+    let question = await Question.findOne({ _id: question_id });
+    if (!question) {
+      return res.status(404).json({ error: "Question not found" });
+    }
+
+    // Remove user ID from votes set if already present
+    if (question.downvotes.includes(req.session.user._id)) {
+      question = await Question.findOneAndUpdate(
+        { _id: question_id },
+        { $pull: { downvotes: req.session.user._id } },
+        { new: true }
+      );
+      if (question) {
+        // Increment user reputation
+        const user = await User.findOneAndUpdate(
+          { _id: req.session.user._id },
+          { $inc: { reputation: 10 } },
+          { new: true }
+        );
+      }
+    } else {
+      // Add user ID to votes set if not already present
+      question = await Question.findOneAndUpdate(
+        { _id: question_id },
+        {
+          $pull: { votes: req.session.user._id },
+          $addToSet: { downvotes: req.session.user._id },
+        },
+        { new: true }
+      );
+      if (question) {
+        // Decrement user reputation
+        const user = await User.findOneAndUpdate(
+          { _id: req.session.user._id },
+          { $inc: { reputation: -10 } },
+          { new: true }
+        );
+      }
+    }
 
     if (!question) {
       return res.status(404).json({ error: "Question not found" });
     }
 
-    // Decrement user reputation
-    const user = await User.findOneAndUpdate(
-      { _id: req.session.user._id },
-      { $inc: { reputation: -10 } },
-      { new: true }
-    );
-
-    return res.status(200).json({ messsage: "Success", votes: question.votes.length - question.downvotes.length });
+    return res.status(200).json({
+      messsage: "Success",
+      votes: question.votes.length - question.downvotes.length,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal server error" });
