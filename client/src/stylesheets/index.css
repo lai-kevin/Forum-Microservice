@@ -224,6 +224,19 @@ margin-top: 2vh;
 margin-bottom: 2vh;
 }
 
+.result-item-original {
+  display: flex;
+  flex-direction: row;
+  border-style: dotted;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  padding-left: 2vh; 
+  padding-right: 2vh; 
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  }
+
 .result-item-stats {
 margin-left: 3vh;
 margin-right: 3vh;

@@ -27,7 +27,7 @@ const ResultListItem = ({
   setCurrentQuestion,
 }) => {
   return (
-    <div className="result-item">
+    <div className="result-item-original">
       <div className="result-item-stats">
         <p>{question.answers.length} answers</p>
         <p>{question.views} views</p>
