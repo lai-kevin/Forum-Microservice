@@ -3,6 +3,8 @@ import { useContext, useEffect, useState } from "react";
 import { Divider, Button } from "@mui/material";
 import axios from "axios";
 import ModifyQuestionPage from "./modifyQuestionPage";
+import UserTagsPage from "./user-tags-page";
+import ModifyTagPage from "./modify-tag-page";
 
 const UserInfo = ({ user }) => {
   const accountAgeInSeconds = Math.floor(
@@ -89,15 +91,27 @@ const UserQuestions = ({ user, setShowModifyScreen, setQuestion , showModifyScre
   );
 };
 
-const UserAnswers = ({ user }) => {};
+const UserAnswers = ({ user }) => {
+  const [answers, setAnswers] = useState([]);
 
-const UserTags = ({ user }) => {};
+};
 
 const Profile = ({ setCurrentPage }) => {
   const [user, setUser] = useContext(UserContext);
   const [display, setDisplay] = useState("questions");
   const [showModifyScreen, setShowModifyScreen] = useState(false);
+  const [showModifyTagScreen, setShowModifyTagScreen] = useState(false);
+  const [tag, setTag] = useState(null);
   const [question, setQuestion] = useState(null);
+
+  const UserTags = () => {
+    return (
+      <div>
+        <UserTagsPage setShowModifyTagScreen={setShowModifyTagScreen} showModifyTagScreen={showModifyTagScreen} setTag={setTag} />
+      </div>
+    );
+  };
+
   let list;
   switch (display) {
     case "questions":
@@ -109,7 +123,7 @@ const Profile = ({ setCurrentPage }) => {
       list = <UserAnswers user={user} />;
       break;
     case "tags":
-      list = <UserTags user={user} />;
+      list = <UserTags user={user} setShowModifyTagScreen={setShowModifyTagScreen} showModifyTagScreen={showModifyTagScreen} />;
       break;
     default:
       list = <UserQuestions user={user} />;
@@ -127,7 +141,7 @@ const Profile = ({ setCurrentPage }) => {
           <div>
             <Button onClick={() => setDisplay("questions")}>Questions</Button>
             <Button onClick={() => setDisplay("answers")}>Answers</Button>
-            <Button onClick={() => setDisplay("tags")}>Answers</Button>
+            <Button onClick={() => setDisplay("tags")}>Tags</Button>
           </div>
           {list}
         </div>
@@ -141,7 +155,19 @@ const Profile = ({ setCurrentPage }) => {
       question={question}
     />
   );
-  return <div>{showModifyScreen ? modifyScreen : profilePageComponent}</div>;
+
+  let modifyTagScreen = (
+    <ModifyTagPage
+      setShowModifyTagScreen={setShowModifyTagScreen}
+      tag={tag}
+    />
+  );
+  return (<div>
+    {showModifyScreen ? modifyScreen : null}
+    {showModifyTagScreen ? modifyTagScreen : null}
+    {showModifyScreen || showModifyTagScreen ? null : profilePageComponent}
+    
+    </div>);
 };
 
 export default Profile;
