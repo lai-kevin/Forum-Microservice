@@ -30,6 +30,24 @@ const ModifyQuestionPage = ({ setShowModifyScreen, question }) => {
   const [hyperlinkError, setHyperlinkError] = useState("");
   const [questionSummary, setQuestionSummary] = useState("");
 
+  async function handleDeleteQuestionClick(question_id) {
+    let config = {
+      method: 'delete',
+      maxBodyLength: Infinity,
+      url: `http://localhost:8000/api/questions_v2?question_id=${question._id}`,
+      headers: {},
+      withCredentials: true,
+    };
+    
+    await axios.request(config)
+    .then((response) => {
+      console.log(`deleted question: ${JSON.stringify(response.data)}`);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
   async function handleUpdateQuestionClick(event) {
     event.preventDefault();
     var title = questionTitle;
@@ -82,7 +100,6 @@ const ModifyQuestionPage = ({ setShowModifyScreen, question }) => {
     );
 
     if (valid) {
-
       const updateQuestion = async () => {
         let data = JSON.stringify({
           question_id: question._id,
@@ -110,7 +127,6 @@ const ModifyQuestionPage = ({ setShowModifyScreen, question }) => {
         } catch (error) {
           console.log(error);
         }
-
       };
 
       updateQuestion();
@@ -185,11 +201,26 @@ const ModifyQuestionPage = ({ setShowModifyScreen, question }) => {
         <div
           style={{ display: "flex", flexDirection: "row", marginTop: "3vh" }}
         >
-          <input type="submit" value="Modify Question" className="button-blue" />
+          <input
+            type="submit"
+            value="Modify Question"
+            className="button-blue"
+          />
           <div style={{ flexGrow: 1 }}></div>
           <p style={{ color: "red" }}> * indicated mandatory fields</p>
         </div>
-        <Button variant="contained" onClick={() => setShowModifyScreen(false)}>Cancel</Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            handleDeleteQuestionClick(question._id);
+            setShowModifyScreen(false);
+          }}
+        >
+          Delete
+        </Button>
+        <Button variant="contained" onClick={() => setShowModifyScreen(false)}>
+          Cancel
+        </Button>
       </form>
     </div>
   );
