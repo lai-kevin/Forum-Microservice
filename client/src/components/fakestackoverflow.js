@@ -12,6 +12,7 @@ import AccountCreationPage from "./pages/account-creation.jsx";
 import LoginPage from "./pages/login-page.jsx";
 import { UserContext } from "../contexts/user-context.js";
 import PostCommentPage from "./pages/post-comment-page.jsx";
+import Profile from "./pages/profile.jsx";
 /**
  * The `FakeStackOverflow` function is a React component that represents a Stack Overflow-like application.
  * It uses state hooks to manage the application's data and current page. The function returns JSX elements that render different components based on the current page state.
@@ -101,6 +102,11 @@ const FakeStackOverflow = () => {
           currentQuestion={currentQuestion}
           currentAnswer={currentAnswer}
         />
+      );
+      break;
+    case "Profile":
+      currentPageComponent = (
+        <Profile setCurrentPage={setCurrentPage}/>
       );
       break;
     default:

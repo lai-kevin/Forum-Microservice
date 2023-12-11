@@ -130,16 +130,40 @@ questionsRouter2.patch("/", async (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ error: "Unauthorized" });
   }
-  const { question_id, title, text, tags } = req.body;
+  const { question_id, summary, title, question_text, tag_strings } = req.body;
 
   const updateFields = {};
   if (title) {
     updateFields.title = title;
   }
-  if (text) {
-    updateFields.text = text;
+  if (summary) {
+    updateFields.summary = summary;
   }
-  if (tags) {
+  if (question_text) {
+    updateFields.text = question_text;
+  }
+  if (tag_strings) {
+    // Check if tags exist in database, if not, create them
+    let tags = [];
+    tags = await Promise.all(
+      tag_strings.map(async (tag_string) => {
+        const tag = await Tag.findOne({ name: tag_string });
+        if (tag) {
+          return tag.id;
+        } else {
+          const newTag = new Tag({
+            name: tag_string,
+            created_by: req.session.user._id,
+          });
+          const savedTag = await newTag.save();
+          if (!savedTag) {
+            return res.status(400).json({ error: "Could not save tag" });
+          }
+          console.log(savedTag);
+          return savedTag.id;
+        }
+      })
+    );
     updateFields.tags = tags;
   }
   const question = await Question.findOneAndUpdate(
