@@ -11,6 +11,7 @@ import axios from "axios";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { Divider } from "@mui/material";
+import PostCommentPage from "./post-comment-page";
 
 function Comments({ comments }) {
   const [page, setPage] = useState(1);
@@ -121,6 +122,7 @@ const AnswerResultListItem = ({ answer }) => {
           <h4>Answer Comments</h4>
           <Comments comments={answer.comments} />
         </div>
+        <PostCommentPage answer={answer} />
       </div>
     </div>
   );
@@ -255,6 +257,7 @@ const QuestionAnswersPage = ({
             <div>
               <h3>Question Comments</h3>
               <Comments comments={question.comments} />
+              <PostCommentPage currentQuestion={question} />
             </div>
           </div>
           <div>

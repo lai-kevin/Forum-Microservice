@@ -79,21 +79,16 @@ const PostCommentPage = ({
   return (
     <div className="form">
       <form onSubmit={ async (event) => await handleSubmit(event)} style={{ flexGrow: 1 }}>
-        <h1>Post a Comment</h1>
-        <p>
-          <i>
-            Commenters must have at least 50 reputation. Max Length: 140
-            Characters
-          </i>
-        </p>
-        <h1>Comment Text*</h1>
-        <textarea
-          className="multi-line-textbox"
-          id="question-text-input"
+        <h5>Comment Text*</h5>
+        <input
+          type="text"
+          className="single-line-textbox"
+          id="question-title-input"
           required
-          maxLength={140}
+          minLength="1"
+          maxLength="140"
           onChange={(event) => setCommentText(event.target.value)}
-        ></textarea>
+        />
 
         <div
           style={{ display: "flex", flexDirection: "row", marginTop: "3vh" }}
