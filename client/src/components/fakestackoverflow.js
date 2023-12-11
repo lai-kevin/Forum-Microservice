@@ -65,6 +65,7 @@ const FakeStackOverflow = () => {
           setCurrentPage={setCurrentPage}
           question={currentQuestion}
           setCurrentAnswer={setCurrentAnswer}
+          setCurrentQuestion={setCurrentQuestion}
         />
       );
       break;

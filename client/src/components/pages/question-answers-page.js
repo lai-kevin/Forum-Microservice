@@ -13,10 +13,38 @@ import { useNavigate } from "react-router-dom";
 import { Divider } from "@mui/material";
 import PostCommentPage from "./post-comment-page";
 
-function Comments({ comments }) {
+/**
+ * Renders a list of comments with pagination.
+ *
+ * @param {Object[]} comments - The array of comments to be rendered.
+ * @returns {JSX.Element} The rendered list of comments.
+ */
+function Comments({ question, answer }) {
   const [page, setPage] = useState(1);
   const start = (page - 1) * 3;
   const end = page * 3;
+  const [comments, setComments] = useState([]);
+
+  // Update with latest comments from the server
+  useEffect(() => {
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: question
+        ? `http://localhost:8000/api/comments?question_id=${question._id}`
+        : `http://localhost:8000/api/comments?answer_id=${answer._id}`,
+      headers: {},
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        setComments(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [answer, question]);
 
   // Sort comments by post_time
   const sortedComments = comments.sort(
@@ -24,7 +52,12 @@ function Comments({ comments }) {
   );
 
   if (sortedComments.length === 0) {
-    return <div>No comments</div>;
+    return (
+      <div>
+        <div>No comments</div>
+        <PostCommentPage currentQuestion={question} currentAnswer={answer}/>
+      </div>
+    );
   }
 
   return (
@@ -49,10 +82,21 @@ function Comments({ comments }) {
           next
         </Button>
       </div>
+      <PostCommentPage currentQuestion={question} currentAnswer={answer}/>
     </div>
   );
 }
 
+/**
+ * Renders a single comment item.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.comment - The comment object.
+ * @param {string} props.comment.text - The text of the comment.
+ * @param {Object} props.comment.posted_by - The user who posted the comment.
+ * @param {string} props.comment.posted_by.username - The username of the user who posted the comment.
+ * @returns {JSX.Element} The rendered comment item.
+ */
 function CommentListItem({ comment }) {
   console.log(comment);
   return (
@@ -117,12 +161,11 @@ const AnswerResultListItem = ({ answer }) => {
         <p className="answer-text">{textArray.map((text) => text)}</p>
         {getAnswerMetaData(answer)}
       </div>
-      <div style={{margin: 10}}>
+      <div style={{ margin: 10 }}>
         <div>
           <h4>Answer Comments</h4>
-          <Comments comments={answer.comments} />
+          <Comments answer={answer} />
         </div>
-        <PostCommentPage currentAnswer={answer} />
       </div>
     </div>
   );
@@ -132,6 +175,7 @@ const QuestionAnswersPage = ({
   setCurrentPage,
   question,
   setCurrentAnswer,
+  setCurrentQuestion,
 }) => {
   const navi = useNavigate();
   const [user, setUser] = useContext(UserContext);
@@ -256,12 +300,13 @@ const QuestionAnswersPage = ({
             </div>
             <div>
               <h3>Question Comments</h3>
-              <Comments comments={question.comments} />
-              <PostCommentPage currentQuestion={question} />
+              <Comments question={question} />
             </div>
           </div>
           <div>
-            <h1 style={{fontSize: 50, textDecoration: "underline"}}>Answers</h1>
+            <h1 style={{ fontSize: 50, textDecoration: "underline" }}>
+              Answers
+            </h1>
           </div>
           <div>
             {answers.slice(start, end).map((answer) => (
