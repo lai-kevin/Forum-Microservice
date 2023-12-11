@@ -122,7 +122,7 @@ const AnswerResultListItem = ({ answer }) => {
           <h4>Answer Comments</h4>
           <Comments comments={answer.comments} />
         </div>
-        <PostCommentPage answer={answer} />
+        <PostCommentPage currentAnswer={answer} />
       </div>
     </div>
   );

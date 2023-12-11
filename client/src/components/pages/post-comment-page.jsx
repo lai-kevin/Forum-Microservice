@@ -93,7 +93,7 @@ const PostCommentPage = ({
         <div
           style={{ display: "flex", flexDirection: "row", marginTop: "3vh" }}
         >
-          <input type="submit" value="Post Question" className="button-blue" />
+          <input type="submit" value="Post Comment" className="button-blue" />
           <div style={{ flexGrow: 1 }}></div>
           <p style={{ color: "red" }}> * indicated mandatory fields</p>
         </div>
