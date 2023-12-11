@@ -6,6 +6,7 @@ const PostCommentPage = ({
   setCurrentPage,
   currentQuestion,
   currentAnswer,
+  setComments,
 }) => {
   const [user, setUser] = useContext(UserContext);
   const [commentText, setCommentText] = useState("");
@@ -43,10 +44,7 @@ const PostCommentPage = ({
           alert("Error posting comment");
           console.log(error);
         });
-      return;
-    }
-
-    if (currentQuestion) {
+    } else if (currentQuestion) {
       let data = JSON.stringify({
         answer_id: "",
         text: commentText,
@@ -72,13 +70,34 @@ const PostCommentPage = ({
           alert("Error posting comment");
           console.log(error);
         });
-      return;
     }
+
+    // get the comments again
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: currentQuestion
+        ? `http://localhost:8000/api/comments?question_id=${currentQuestion._id}`
+        : `http://localhost:8000/api/comments?answer_id=${currentAnswer._id}`,
+      headers: {},
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        setComments(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
     <div className="form">
-      <form onSubmit={ async (event) => await handleSubmit(event)} style={{ flexGrow: 1 }}>
+      <form
+        onSubmit={async (event) => await handleSubmit(event)}
+        style={{ flexGrow: 1 }}
+      >
         <h5>Comment Text*</h5>
         <input
           type="text"

@@ -55,7 +55,7 @@ function Comments({ question, answer }) {
     return (
       <div>
         <div>No comments</div>
-        <PostCommentPage currentQuestion={question} currentAnswer={answer}/>
+        <PostCommentPage currentQuestion={question} currentAnswer={answer} setComments={setComments}/>
       </div>
     );
   }
@@ -82,7 +82,7 @@ function Comments({ question, answer }) {
           next
         </Button>
       </div>
-      <PostCommentPage currentQuestion={question} currentAnswer={answer}/>
+      <PostCommentPage currentQuestion={question} currentAnswer={answer} setComments={setComments}/>
     </div>
   );
 }
@@ -164,7 +164,7 @@ const AnswerResultListItem = ({ answer }) => {
       <div style={{ margin: 10 }}>
         <div>
           <h4>Answer Comments</h4>
-          <Comments answer={answer} />
+          <Comments comment={null} answer={answer} />
         </div>
       </div>
     </div>
@@ -285,22 +285,10 @@ const QuestionAnswersPage = ({
               {question.tags.map((tag) => tagsListItem(tag))}
             </div>
             <div>
-              {user && (
-                <button
-                  className="blue-button"
-                  id="question-answer-button"
-                  onClick={() => {
-                    setCurrentAnswer(undefined);
-                    setCurrentPage("Post Comment");
-                  }}
-                >
-                  Post Comment
-                </button>
-              )}
             </div>
             <div>
               <h3>Question Comments</h3>
-              <Comments question={question} />
+              <Comments question={question} answer={null} />
             </div>
           </div>
           <div>
