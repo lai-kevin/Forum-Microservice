@@ -5,6 +5,7 @@ const Answer = require("../models/answers");
 const Comment = require("../models/comment");
 const questions = require("../models/questions");
 const axios = require("axios");
+const User = require("../models/users");
 
 // Create an question and store in database
 questionsRouter2.post("/", async (req, res) => {
