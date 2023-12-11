@@ -24,7 +24,7 @@ answersRouter2.post("/", async (req, res) => {
       { $push: { answers: newAnswer._id } },
       { new: true }
     );
-    if(!update) {
+    if (!update) {
       res.status(404).json({ error: "Question not found" });
       return;
     }
@@ -42,26 +42,30 @@ answersRouter2.post("/", async (req, res) => {
 answersRouter2.get("/", async (req, res) => {
   try {
     const question_id = req.query.question_id;
-    const questionWithAnswers = await Question.findOne({ _id: question_id }).populate({
+    const questionWithAnswers = await Question.findOne({
+      _id: question_id,
+    }).populate({
       path: "answers",
       populate: [
         {
           path: "ans_by",
-          model: "User"
+          model: "User",
         },
         {
           path: "comments",
           populate: {
             path: "posted_by",
-            model: "User"
-          }
-        }
-      ]
+            model: "User",
+          },
+        },
+      ],
     });
     res.status(200).json(questionWithAnswers.answers);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Failed to retrieve answers from database" });
+    res
+      .status(500)
+      .json({ message: "Failed to retrieve answers from database" });
   }
 });
 
@@ -70,13 +74,13 @@ answersRouter2.patch("/", async (req, res) => {});
 
 // Delete an answer
 answersRouter2.delete("/", async (req, res) => {
-  if(!req.session.user) {
+  if (!req.session.user) {
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
-  try{
+  try {
     const deletedAnswer = await Answer.deleteOne({ _id: req.body.answer_id });
-    if(!deletedAnswer) {
+    if (!deletedAnswer) {
       res.status(404).json({ error: "Answer not found" });
       return;
     }
@@ -88,31 +92,60 @@ answersRouter2.delete("/", async (req, res) => {
 
 answersRouter2.patch("/upvote", async (req, res) => {
   try {
-    if (!req.session.user  || req.session.user.reputation < 50) {
+    if (!req.session.user || req.session.user.reputation < 50) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
     // Update question votes
     const { answer_id } = req.query;
-    const answer = await Answer.findOneAndUpdate(
-      { _id: answer_id },
-      { $pull: { downvotes: req.session.user._id }, $addToSet: { votes: req.session.user._id } },
-      { new: true }
-      );
-    
+    let answer = await Answer.findOne({ _id: answer_id });
     if (!answer) {
       return res.status(404).json({ error: "Answer not found" });
     }
 
-    // Increment user repuation
-    const user = await User.findOneAndUpdate(
-      { _id: req.session.user._id },
-      { $inc: { reputation: 5 } },
-      { new: true }
-    );
+    // If user has already upvoted, remove upvote
+    if (answer.votes.includes(req.session.user._id)) {
+      answer = await Answer.findOneAndUpdate(
+        { _id: answer_id },
+        { $pull: { votes: req.session.user._id } },
+        { new: true }
+      );
+      if (answer) {
+        // Increment user repuation
+        const user = await User.findOneAndUpdate(
+          { _id: req.session.user._id },
+          { $inc: { reputation: -5 } },
+          { new: true }
+        );
+      }
+    } else {
+      // If user has already downvoted, remove downvote and add upvote
+      answer = await Answer.findOneAndUpdate(
+        { _id: answer_id },
+        {
+          $pull: { downvotes: req.session.user._id },
+          $addToSet: { votes: req.session.user._id },
+        },
+        { new: true }
+      );
+      if (answer) {
+        // Increment user repuation
+        const user = await User.findOneAndUpdate(
+          { _id: req.session.user._id },
+          { $inc: { reputation: 5 } },
+          { new: true }
+        );
+      }
+    }
 
-    console.log(answer);
-    return res.status(200).json({ messsage: "Success", votes: answer.votes.length - answer.downvotes.length });
+    if (!answer) {
+      return res.status(404).json({ error: "Answer not found" });
+    }
+
+    return res.status(200).json({
+      messsage: "Success",
+      votes: answer.votes.length - answer.downvotes.length,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal server error" });
@@ -126,24 +159,52 @@ answersRouter2.patch("/downvote", async (req, res) => {
     }
     // Update answer votes
     const { answer_id } = req.query;
-    const answer = await Answer.findOneAndUpdate(
-      { _id: answer_id },
-      { $pull: { votes: req.session.user._id }, $addToSet: { downvotes: req.session.user._id } },
-      { new: true }
-    );
+    let answer = await Answer.findOne({ _id: answer_id });
+    if (!answer) {
+      return res.status(404).json({ error: "Answer not found" });
+    }
+    if (answer.downvotes.includes(req.session.user._id)) {
+      answer = await Answer.findOneAndUpdate(
+        { _id: answer_id },
+        { $pull: { downvotes: req.session.user._id } },
+        { new: true }
+      );
+      if (answer) {
+        // Increment user reputation
+        const user = await User.findOneAndUpdate(
+          { _id: req.session.user._id },
+          { $inc: { reputation: 10 } },
+          { new: true }
+        );
+      }
+    } else {
+      answer = await Answer.findOneAndUpdate(
+        { _id: answer_id },
+        {
+          $pull: { votes: req.session.user._id },
+          $addToSet: { downvotes: req.session.user._id },
+        },
+        { new: true }
+      );
+
+      if (answer) {
+        // Decrement user reputation
+        const user = await User.findOneAndUpdate(
+          { _id: req.session.user._id },
+          { $inc: { reputation: -10 } },
+          { new: true }
+        );
+      }
+    }
 
     if (!answer) {
       return res.status(404).json({ error: "Answer not found" });
     }
 
-    // Decrement user reputation
-    const user = await User.findOneAndUpdate(
-      { _id: req.session.user._id },
-      { $inc: { reputation: -10 } },
-      { new: true }
-    );
-
-    return res.status(200).json({ messsage: "Success", votes: answer.votes.length - answer.downvotes.length });
+    return res.status(200).json({
+      messsage: "Success",
+      votes: answer.votes.length - answer.downvotes.length,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal server error" });
