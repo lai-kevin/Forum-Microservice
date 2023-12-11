@@ -1,6 +1,7 @@
 const answersRouter2 = require("express").Router();
 const Answer = require("../models/answers");
 const Question = require("../models/questions");
+const User = require("../models/users");
 
 // Create an answer and store in database
 answersRouter2.post("/", async (req, res) => {

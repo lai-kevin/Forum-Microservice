@@ -137,6 +137,48 @@ function tagsListItem(tag) {
  * @returns {JSX.Element} - Rendered answer item, including the answer text and metadata.
  */
 const AnswerResultListItem = ({ answer }) => {
+  const [user, setUser] = useContext(UserContext);
+  const [votes, setVotes] = useState(answer.votes.length);
+
+  const handleUpvote = async () => {
+    let config = {
+      method: "patch",
+      maxBodyLength: Infinity,
+      url: `http://localhost:8000/api/answers_v2/upvote?answer_id=${answer._id}`,
+      headers: {},
+      withCredentials: true,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        setVotes(response.data.votes);
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleDownvote = async () => {
+    let config = {
+      method: "patch",
+      maxBodyLength: Infinity,
+      url: `http://localhost:8000/api/answers_v2/downvote?answer_id=${answer._id}`,
+      headers: {},
+      withCredentials: true,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        setVotes(response.data.votes);
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   var answerText = answer.text;
   const hyperlinkRegex = /\[[^\]]+\]\([^)]+\)/g;
   var textArray = answerText.split(hyperlinkRegex);
@@ -171,7 +213,14 @@ const AnswerResultListItem = ({ answer }) => {
       </div>
       <div style={{ margin: 10 }}>
         <div>
-          <h4>Answer Comments</h4>
+          <p>{votes} votes</p>
+          {user && (
+            <div>
+              <Button onClick={() => handleUpvote()}>Upvote</Button>
+              <Button onClick={() => handleDownvote()}>Downvote</Button>
+            </div>
+          )}
+          <h4>Answer Comments:</h4>
           <Comments comment={null} answer={answer} />
         </div>
       </div>
