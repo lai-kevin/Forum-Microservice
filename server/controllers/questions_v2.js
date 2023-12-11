@@ -184,7 +184,24 @@ questionsRouter2.delete("/", async (req, res) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
     const { question_id } = req.query;
-    const question = await Question.findOneAndDelete({
+    let question = await Question.findOne({ _id: question_id });
+    question = await question.populate(["answers", "comments"]);
+    if (!question) {
+      return res.status(404).json({ error: "Question not found" });
+    }
+    
+    // Delete comments of the answers
+    for (const answer of question.answers) {
+      await Comment.deleteMany({ _id: { $in: answer.comments } });
+    }
+
+    // Delete comments of the question
+    await Comment.deleteMany({ _id: { $in: question.comments } });
+
+    // Delete answers of the question
+    await Answer.deleteMany({ _id: { $in: question.answers } });
+
+    question = await Question.findOneAndDelete({
       _id: question_id,
       asked_by: req.session.user._id,
     });
@@ -192,6 +209,7 @@ questionsRouter2.delete("/", async (req, res) => {
     if (!question) {
       return res.status(404).json({ error: "Question not found" });
     }
+
     return res.status(200).json(question);
   } catch (error) {
     console.log(error);
