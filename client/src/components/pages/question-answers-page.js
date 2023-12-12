@@ -111,23 +111,23 @@ function CommentListItem({ comment }) {
 
   const handleUpvote = async () => {
     let config = {
-      method: 'patch',
+      method: "patch",
       maxBodyLength: Infinity,
       url: `http://localhost:8000/api/comments/upvote?comment_id=${comment._id}`,
       headers: {},
       withCredentials: true,
     };
-    
-    axios.request(config)
-    .then((response) => {
-      setVotes(response.data.votes);
-      console.log(JSON.stringify(response.data));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-    
-  }
+
+    axios
+      .request(config)
+      .then((response) => {
+        setVotes(response.data.votes);
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <div style={{ display: "flex", border: "dotted" }}>
       <p className="answer-text">{comment.text}</p>
@@ -135,7 +135,9 @@ function CommentListItem({ comment }) {
       <p className="answer-text">votes: {votes}</p>
       {user && (
         <div>
-          <Button style={{margin: 10}} onClick={() => handleUpvote()}>Upvote</Button>
+          <Button style={{ margin: 10 }} onClick={() => handleUpvote()}>
+            Upvote
+          </Button>
         </div>
       )}
     </div>
@@ -260,6 +262,7 @@ const QuestionAnswersPage = ({
   question,
   setCurrentAnswer,
   setCurrentQuestion,
+  userMode,
 }) => {
   const navi = useNavigate();
   const [user, setUser] = useContext(UserContext);
@@ -427,11 +430,38 @@ const QuestionAnswersPage = ({
             </div>
           </div>
           <div>
-            <h1 style={{ fontSize: 50, textDecoration: "underline" }}>
-              Answers
-            </h1>
           </div>
           <div>
+            {userMode && <h1>Answers By Me</h1>}
+            {userMode && (
+              <h4>
+                {
+                  answers
+                    .filter((answer) => answer.ans_by === user._id)
+                    .map((answer) => (
+                      <AnswerResultListItem
+                        answer={answer}
+                        key={`${answer._id}`}
+                      />
+                    )).length
+                }{" "}
+                answers from me
+              </h4>
+            )}
+            {userMode
+              ? answers
+                  .filter((answer) => answer.ans_by === user._id)
+                  .map((answer) => (
+                    <AnswerResultListItem
+                      answer={answer}
+                      key={`${answer._id}`}
+                    />
+                  ))
+              : null}
+          </div>
+            <Divider style={{ backgroundColor: 'black', borderWidth: '3px' }} />
+          <div>
+            <h1>Paginated Answers</h1>
             {answers.slice(start, end).map((answer) => (
               <AnswerResultListItem answer={answer} key={`${answer._id}`} />
             ))}

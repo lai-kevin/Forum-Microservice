@@ -5,6 +5,8 @@ import axios from "axios";
 import ModifyQuestionPage from "./modifyQuestionPage";
 import UserTagsPage from "./user-tags-page";
 import ModifyTagPage from "./modify-tag-page";
+import UserAnswersPage from "./user-answers-page";
+import QuestionAnswersPage from "./question-answers-page";
 
 const UserInfo = ({ user }) => {
   const accountAgeInSeconds = Math.floor(
@@ -15,14 +17,19 @@ const UserInfo = ({ user }) => {
     <div>
       <h1>Username: {user.username}</h1>
       <h2>Email: {user.email}</h2>
-      <h2>Admin: {user.admin}</h2>
+      <h2>Admin: {user.admin ? "yes" : "no"}</h2>
       <h2>Reputation: {user.reputation}</h2>
       <h2>Account Age (seconds): {accountAgeInSeconds}</h2>
     </div>
   );
 };
 
-const UserQuestions = ({ user, setShowModifyScreen, setQuestion , showModifyScreen }) => {
+const UserQuestions = ({
+  user,
+  setShowModifyScreen,
+  setQuestion,
+  showModifyScreen,
+}) => {
   const [questions, setQuestions] = useState([]);
 
   const fetchQuestions = async () => {
@@ -36,13 +43,15 @@ const UserQuestions = ({ user, setShowModifyScreen, setQuestion , showModifyScre
     axios
       .request(config)
       .then((response) => {
-        const filteredQuestions = response.data.filter(question => question.posted_by === user._id);
+        const filteredQuestions = response.data.filter(
+          (question) => question.posted_by === user._id
+        );
         setQuestions(filteredQuestions);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
 
   useEffect(() => {
     fetchQuestions();
@@ -91,24 +100,35 @@ const UserQuestions = ({ user, setShowModifyScreen, setQuestion , showModifyScre
   );
 };
 
-const UserAnswers = ({ user }) => {
-  const [answers, setAnswers] = useState([]);
-
-};
-
 const Profile = ({ setCurrentPage }) => {
   const [user, setUser] = useContext(UserContext);
   const [display, setDisplay] = useState("questions");
   const [showModifyScreen, setShowModifyScreen] = useState(false);
   const [showModifyTagScreen, setShowModifyTagScreen] = useState(false);
+  const [showModifyAnswerScreen, setShowModifyAnswerScreen] = useState(false);
   const [tag, setTag] = useState(null);
   const [question, setQuestion] = useState(null);
+  const [answer, setAnswer] = useState(null);
 
   const UserTags = () => {
     return (
       <div>
-        <UserTagsPage setShowModifyTagScreen={setShowModifyTagScreen} showModifyTagScreen={showModifyTagScreen} setTag={setTag} />
+        <UserTagsPage
+          setShowModifyTagScreen={setShowModifyTagScreen}
+          showModifyTagScreen={showModifyTagScreen}
+          setTag={setTag}
+        />
       </div>
+    );
+  };
+
+  const UserAnswers = ({ user }) => {
+    return (
+      <UserAnswersPage
+        setShowModifyAnswerScreen={setShowModifyAnswerScreen}
+        showModifyAnswerScreen={showModifyAnswerScreen}
+        setQuestion={setQuestion}
+      />
     );
   };
 
@@ -116,14 +136,25 @@ const Profile = ({ setCurrentPage }) => {
   switch (display) {
     case "questions":
       list = (
-        <UserQuestions user={user} setShowModifyScreen={setShowModifyScreen} setQuestion={setQuestion} showModifyScreen={showModifyScreen}/>
+        <UserQuestions
+          user={user}
+          setShowModifyScreen={setShowModifyScreen}
+          setQuestion={setQuestion}
+          showModifyScreen={showModifyScreen}
+        />
       );
       break;
     case "answers":
       list = <UserAnswers user={user} />;
       break;
     case "tags":
-      list = <UserTags user={user} setShowModifyTagScreen={setShowModifyTagScreen} showModifyTagScreen={showModifyTagScreen} />;
+      list = (
+        <UserTags
+          user={user}
+          setShowModifyTagScreen={setShowModifyTagScreen}
+          showModifyTagScreen={showModifyTagScreen}
+        />
+      );
       break;
     default:
       list = <UserQuestions user={user} />;
@@ -133,7 +164,7 @@ const Profile = ({ setCurrentPage }) => {
   let profilePageComponent = (
     <div style={{ justifyContent: "center", textAlign: "center" }}>
       <h1>Profile</h1>
-      {user && (
+      {user ? (
         <div>
           <div>
             <UserInfo user={user.user} />
@@ -145,6 +176,8 @@ const Profile = ({ setCurrentPage }) => {
           </div>
           {list}
         </div>
+      ) : (
+        <h1>Not logged in</h1>
       )}
     </div>
   );
@@ -157,17 +190,26 @@ const Profile = ({ setCurrentPage }) => {
   );
 
   let modifyTagScreen = (
-    <ModifyTagPage
-      setShowModifyTagScreen={setShowModifyTagScreen}
-      tag={tag}
+    <ModifyTagPage setShowModifyTagScreen={setShowModifyTagScreen} tag={tag} />
+  );
+
+  let modifyAnswerScreen = (
+    <QuestionAnswersPage
+      setCurrentPage={setCurrentPage}
+      question={question}
+      userMode={true}
     />
   );
-  return (<div>
-    {showModifyScreen ? modifyScreen : null}
-    {showModifyTagScreen ? modifyTagScreen : null}
-    {showModifyScreen || showModifyTagScreen ? null : profilePageComponent}
-    
-    </div>);
+  return (
+    <div>
+      {showModifyScreen ? modifyScreen : null}
+      {showModifyTagScreen ? modifyTagScreen : null}
+      {showModifyAnswerScreen ? modifyAnswerScreen : null}
+      {showModifyScreen || showModifyTagScreen || showModifyAnswerScreen
+        ? null
+        : profilePageComponent}
+    </div>
+  );
 };
 
 export default Profile;

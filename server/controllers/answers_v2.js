@@ -41,26 +41,52 @@ answersRouter2.post("/", async (req, res) => {
 // Get answer(s) of question database.
 answersRouter2.get("/", async (req, res) => {
   try {
-    const question_id = req.query.question_id;
-    const questionWithAnswers = await Question.findOne({
-      _id: question_id,
-    }).populate({
-      path: "answers",
-      populate: [
-        {
-          path: "ans_by",
-          model: "User",
-        },
-        {
-          path: "comments",
-          populate: {
-            path: "posted_by",
+    // If question_id is not present, return all answers by user
+    if (!req.query.question_id && req.query.user_id) {
+      const questionWithAnswers = await Question.find({}).populate({
+        path: "answers",
+        populate: [
+          {
+            path: "ans_by",
             model: "User",
           },
-        },
-      ],
-    });
-    res.status(200).json(questionWithAnswers.answers);
+          {
+            path: "comments",
+            populate: {
+              path: "posted_by",
+              model: "User",
+            },
+          },
+        ],
+      }).populate("tags");
+      const filteredQuestionWithAnswers = questionWithAnswers.filter(question => {
+        return question.answers.some(answer => {
+          return answer.ans_by._id.toString() === req.query.user_id;
+        })
+      });
+      res.status(200).json(filteredQuestionWithAnswers);
+    } else {
+      const question_id = req.query.question_id;
+      const questionWithAnswers = await Question.findOne({
+        _id: question_id,
+      }).populate({
+        path: "answers",
+        populate: [
+          {
+            path: "ans_by",
+            model: "User",
+          },
+          {
+            path: "comments",
+            populate: {
+              path: "posted_by",
+              model: "User",
+            },
+          },
+        ],
+      });
+      res.status(200).json(questionWithAnswers.answers);
+    }
   } catch (error) {
     console.log(error);
     res
