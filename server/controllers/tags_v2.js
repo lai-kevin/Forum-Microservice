@@ -85,6 +85,7 @@ tagsRouter2.delete("/", async (req, res) => {
       return;
     }
     // If the user created the tag, delete it
+    console.log(req.query.tag_name)
     const deletedTag = await Tag.deleteOne({ name: req.query.tag_name, created_by: req.session.user._id });
     console.log(deletedTag);
     if (deletedTag.deletedCount === 1) {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Button } from "@mui/material";
-const ModifyTagPage = ({tag}) => {
+const ModifyTagPage = ({tag , setShowModifyTagScreen}) => {
   const [tagName, setTagName] = useState("");
 
 
@@ -9,16 +9,18 @@ const ModifyTagPage = ({tag}) => {
     let config = {
       method: 'delete',
       maxBodyLength: Infinity,
-      url: `http://localhost:8000/api/tags_v2?tag_name=${tagName}`,
+      url: `http://localhost:8000/api/tags_v2?tag_name=${tag.name}`,
       headers: {},
       withCredentials: true,
     };
     
     axios.request(config)
     .then((response) => {
+      setShowModifyTagScreen(false);
       console.log(JSON.stringify(response.data));
     })
     .catch((error) => {
+      setShowModifyTagScreen(false);
       console.log(error);
     });
   }
@@ -43,9 +45,11 @@ const ModifyTagPage = ({tag}) => {
     
     await axios.request(config)
     .then((response) => {
+      setShowModifyTagScreen(false);
       console.log(JSON.stringify(response.data));
     })
     .catch((error) => {
+      setShowModifyTagScreen(false);
       console.log(error);
     });
   }
