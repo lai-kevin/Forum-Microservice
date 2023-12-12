@@ -123,7 +123,8 @@ const UserAnswersPage = ({ setShowModifyAnswerScreen, setQuestion , showModifyAn
       await axios
         .request(config)
         .then((response) => {
-          const filteredAnswers = response.data.filter(answer => answer.ans_by === user.user._id);
+          const filteredAnswers = response.data.filter(answer => answer.asked_by === user.user._id);
+          console.log(response.data)
           setAnswers(filteredAnswers);
         })
         .catch((error) => {
