@@ -128,6 +128,7 @@ function CommentListItem({ comment }) {
         console.log(error);
       });
   };
+  console.log(comment)
   return (
     <div style={{ display: "flex", border: "dotted" }}>
       <p className="answer-text">{comment.text}</p>

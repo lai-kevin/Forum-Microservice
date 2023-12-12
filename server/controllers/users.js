@@ -101,9 +101,6 @@ users.delete("/", async (req, res) => {
       res.status(401).json({ error: "Unauthorized" });
       return;
     }
-    const deletedComments = await Comment.deleteMany({ posted_by: req.session.user._id });
-    const deletedQuestions = await Questions.deleteMany({ asked_by: req.session.user._id });
-    const deletedAnswers = await Answers.deleteMany({ ans_by: req.session.user._id});
     const deleted = await Users.deleteOne({ _id: req.session.user._id });
     res.status(200).json(deleted);
   } catch (error){

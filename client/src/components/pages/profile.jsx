@@ -38,13 +38,14 @@ const UserQuestions = ({
       maxBodyLength: Infinity,
       url: "http://localhost:8000/api/questions_v2",
       headers: {},
+      withCredentials: true,
     };
 
     axios
       .request(config)
       .then((response) => {
         const filteredQuestions = response.data.filter(
-          (question) => question.posted_by === user.user._id
+          (question) => question.asked_by._id === user.user._id
         );
         setQuestions(filteredQuestions);
       })
