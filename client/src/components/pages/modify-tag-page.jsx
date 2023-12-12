@@ -75,6 +75,7 @@ const ModifyTagPage = ({tag , setShowModifyTagScreen}) => {
         >
           <input type="submit" value="Edit Tag" className="button-blue" />
           <Button variant="contained" onClick={ async () => await handleDeleteTagClick()}>Delete Tag</Button>
+          <Button variant="contained" onClick={ async () => setShowModifyTagScreen(false)}>Cancel</Button>
           <div style={{ flexGrow: 1 }}></div>
           <p style={{ color: "red" }}> * indicated mandatory fields</p>
         </div>

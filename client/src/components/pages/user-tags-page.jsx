@@ -50,7 +50,7 @@ const UserTagsPage = ({showModifyTagScreen, setShowModifyTagScreen, setTag}) => 
       <div className="page-top">
         <div className="page-info">
           <h1>{tags.length} Tags</h1>
-          <h1 style={{ flex: 1, textAlign: "center" }}>All Tags</h1>
+          <h1 style={{ flex: 1, textAlign: "center" }}>User Tags</h1>
         </div>
       </div>
       <div
@@ -71,6 +71,7 @@ const UserTagsPage = ({showModifyTagScreen, setShowModifyTagScreen, setTag}) => 
                 >
                   <u>{tag.name}</u>
                 </p>
+                <p style={{ color: "blue" }} onClick={() => handleTagBlockClick(tag)}>Edit/Delete</p>
                 <p>
                   {questions.length}{" "}
                   {questions.length ? "questions" : "question"}
