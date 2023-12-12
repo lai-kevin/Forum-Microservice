@@ -3,7 +3,7 @@ import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../contexts/user-context";
 import axios from "axios";
 
-const TagsPage = ({ setCurrentPage, setTag}) => {
+const UserTagsPage = ({showModifyTagScreen, setShowModifyTagScreen, setTag}) => {
   const [user, setUser] = useContext(UserContext);
   const [tags, setTags] = useState([]);
   const [tagQuestions, setTagQuestions] = useState([]);
@@ -18,9 +18,11 @@ const TagsPage = ({ setCurrentPage, setTag}) => {
           headers: {},
         };
 
-        // Get all tags
+        // Get all tags and filter
         const response = await axios.request(config);
-        const fetchedTags = response.data;
+        const fetchedTags = response.data.filter(
+          (tag) => tag.created_by !== user._id
+        );
         setTags(fetchedTags);
 
         // Get all questions for each tag
@@ -35,14 +37,12 @@ const TagsPage = ({ setCurrentPage, setTag}) => {
       }
     };
 
-    
-
     fetchTags();
   }, []);
 
   const handleTagBlockClick = (tag) => {
     setTag(tag);
-    setCurrentPage("Tag Questions");
+    setShowModifyTagScreen(true)
   };
 
   return (
@@ -50,15 +50,7 @@ const TagsPage = ({ setCurrentPage, setTag}) => {
       <div className="page-top">
         <div className="page-info">
           <h1>{tags.length} Tags</h1>
-          <h1 style={{ flex: 1, textAlign: "center" }}>All Tags</h1>
-          {user && (
-            <button
-              id="question-ask-button"
-              onClick={() => setCurrentPage("Post Question")}
-            >
-              Ask Question
-            </button>
-          )}
+          <h1 style={{ flex: 1, textAlign: "center" }}>User Tags</h1>
         </div>
       </div>
       <div
@@ -79,6 +71,7 @@ const TagsPage = ({ setCurrentPage, setTag}) => {
                 >
                   <u>{tag.name}</u>
                 </p>
+                <p style={{ color: "blue" }} onClick={() => handleTagBlockClick(tag)}>Edit/Delete</p>
                 <p>
                   {questions.length}{" "}
                   {questions.length ? "questions" : "question"}
@@ -92,4 +85,4 @@ const TagsPage = ({ setCurrentPage, setTag}) => {
   );
 };
 
-export default TagsPage;
+export default UserTagsPage;

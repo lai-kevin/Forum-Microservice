@@ -1,14 +1,18 @@
 import ResultListItem from "../page-components/result-list-item";
+import { getQuestions } from "../../models/tag";
+import { UserContext } from "../../contexts/user-context";
+import { useContext } from "react";
 import {
   handleSortByNewestClickTag,
   handleSortByUnansweredClickTag,
   handleSortByActiveClickTag,
 } from "../utils/sorting";
+import { Button } from "@mui/material";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 /**
  * Renders a page with a list of questions related to a specific tag.
- * 
+ *
  * @param {Object} appModel - The application model.
  * @param {Function} setAppModel - The function to update the application model.
  * @param {string} tagString - The tag string used to filter the questions.
@@ -16,19 +20,25 @@ import { useState } from "react";
  * @param {Function} setCurrentQuestion - The function to update the currently selected question in the application.
  * @returns {JSX.Element} The rendered TagQuestionsPage component.
  */
-const TagQuestionsPage = ({
-  appModel,
-  setAppModel,
-  tagString,
-  setCurrentPage,
-  setCurrentQuestion,
-}) => {
-  var tag = appModel.data.tags.find(
-    (tag) => tag.name.toLowerCase() === tagString.toLowerCase()
-  );
-  const [results, setResults] = useState(
-    appModel.searchQuestions(`[${tag.name}]`)
-  );
+const TagQuestionsPage = ({ tag, setCurrentPage, setCurrentQuestion }) => {
+  const [user, setUser] = useContext(UserContext);
+  const [results, setResults] = useState([]);
+  const [page, setPage] = useState(1);
+  const start = (page - 1) * 5;
+  const end = page * 5;
+
+  useEffect(() => {
+    const fetchTagQuestions = async () => {
+      try {
+        // Get all questions for tag
+        const tagQuestions = await getQuestions(tag);
+        setResults(tagQuestions);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchTagQuestions();
+  }, [tag]);
 
   return (
     <div className="page">
@@ -37,9 +47,11 @@ const TagQuestionsPage = ({
           <div className="page-info">
             <h1>Questions of Tag: [{tag.name}]</h1>
             <div style={{ flexGrow: 1 }}></div>
-            <button id="question-ask-button" onClick={() => {}}>
-              Ask Question
-            </button>
+            {user && (
+              <button id="question-ask-button" onClick={() => {}}>
+                Ask Question
+              </button>
+            )}
           </div>
           <div className="num-questions-sortby">
             <p> {results.length} questions</p>
@@ -49,8 +61,8 @@ const TagQuestionsPage = ({
                 <button
                   className="sort-button"
                   id="sortby-newest"
-                  onClick={() => {
-                    handleSortByNewestClickTag(appModel, setResults, tag);
+                  onClick={async () => {
+                    await handleSortByNewestClickTag(setResults, tag);
                   }}
                 >
                   Newest
@@ -60,8 +72,8 @@ const TagQuestionsPage = ({
                 <button
                   className="sort-button"
                   id="sortby-active"
-                  onClick={() => {
-                    handleSortByActiveClickTag(appModel, setResults, tag);
+                  onClick={async () => {
+                    await handleSortByActiveClickTag(setResults, tag);
                   }}
                 >
                   Active
@@ -71,8 +83,8 @@ const TagQuestionsPage = ({
                 <button
                   className="sort-button"
                   id="sortby-unanswered"
-                  onClick={() => {
-                    handleSortByUnansweredClickTag(appModel, setResults, tag);
+                  onClick={async () => {
+                    await handleSortByUnansweredClickTag(setResults, tag);
                   }}
                 >
                   Unanswered
@@ -84,11 +96,9 @@ const TagQuestionsPage = ({
       </div>
       <div id="result-list">
         {results.length ? (
-          results.map((result) => {
+          results.slice(start, end).map((result) => {
             return (
               <ResultListItem
-                appModel={appModel}
-                setModel={setAppModel}
                 question={result}
                 setCurrentPage={setCurrentPage}
                 setCurrentQuestion={setCurrentQuestion}
@@ -99,6 +109,21 @@ const TagQuestionsPage = ({
         ) : (
           <h2 style={{ margin: "5vh" }}>No Questions Found</h2>
         )}
+      </div>
+      <div style={{ position: "fixed", bottom: 0, right: 0, margin: 10 }}>
+        <Button
+          variant="contained"
+          onClick={() => setPage(page === 1 ? 1 : page - 1)}
+          style={{ marginRight: 10 }}
+        >
+          prev
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => setPage(page * 5 > results.length ? page : page + 1)}
+        >
+          next
+        </Button>
       </div>
     </div>
   );

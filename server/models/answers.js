@@ -7,8 +7,14 @@ const answerSchema = mongoose.Schema({
     required: true,
   },
   votes: {
-    type: Number,
-    default: 0,
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "User",
+    default: [],
+  },
+  downvotes: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "User",
+    default: [],
   },
   ans_by: {
     type: mongoose.Schema.Types.ObjectId,

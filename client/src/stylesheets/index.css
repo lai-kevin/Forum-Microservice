@@ -24,6 +24,13 @@ header {
   align-items: center;
 }
 
+.user-info{
+  position: absolute;
+  left: 0;
+  display: flex;
+  margin-left: 1rem;
+}
+
 .search-bar-container{
   margin-left: auto;
 }
@@ -38,6 +45,7 @@ header {
   border: none;
   border-radius: 4px;
   font-size: 12px;
+  margin-right: 1rem;
 }
 
 .menu{
@@ -163,7 +171,7 @@ background-color: white;
 padding-left: 2vh; 
 padding-right: 2vh; 
 margin-top: 3vh;
-border-style: dotted;
+border-style: solid;
 border-top: none;
 border-right: none;
 border-left: none;
@@ -198,18 +206,36 @@ display: inline-flex;
 margin-top: 0;
 }
 
+.result-item-with-comments {
+  display: flex;
+  flex-direction: column;
+  border-style: dotted;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+}
+
 .result-item {
 display: flex;
 flex-direction: row;
 padding-left: 2vh; 
 padding-right: 2vh; 
-border-style: dotted;
-border-top: none;
-border-right: none;
-border-left: none;
 margin-top: 2vh;
 margin-bottom: 2vh;
 }
+
+.result-item-original {
+  display: flex;
+  flex-direction: row;
+  border-style: dotted;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  padding-left: 2vh; 
+  padding-right: 2vh; 
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  }
 
 .result-item-stats {
 margin-left: 3vh;

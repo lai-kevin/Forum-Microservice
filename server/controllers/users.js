@@ -2,6 +2,9 @@ const users = require("express").Router();
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const Users = require("../models/users");
+const Comment = require("../models/comment");
+const Questions = require("../models/questions");
+const Answers = require("../models/answers");
 
 // Create a user and store in database
 users.post("/register", async (req, res) => {
@@ -73,6 +76,7 @@ users.post("/logout", async (req, res) => {
 // Get users from database if admin.
 users.get("/", async (req, res) => {
   try {
+    // If user is not admin, return error
     if (req.session.user?.admin !== true) {
       res.status(401).json({ error: "Unauthorized" });
       return;
@@ -97,7 +101,10 @@ users.delete("/", async (req, res) => {
       res.status(401).json({ error: "Unauthorized" });
       return;
     }
-    const deleted = await Users.deleteOne({ _id: req.body.id });
+    const deletedComments = await Comment.deleteMany({ posted_by: req.session.user._id });
+    const deletedQuestions = await Questions.deleteMany({ asked_by: req.session.user._id });
+    const deletedAnswers = await Answers.deleteMany({ ans_by: req.session.user._id});
+    const deleted = await Users.deleteOne({ _id: req.session.user._id });
     res.status(200).json(deleted);
   } catch (error){
     console.error(error);

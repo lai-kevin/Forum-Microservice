@@ -15,6 +15,8 @@ const NavigationBar = ({ appModel, setCurrentPage }) => {
     highlight === "Questions" ? { backgroundColor: "lightgrey" } : {};
   const tagsTabStyle =
     highlight === "Tags" ? { backgroundColor: "lightgrey" } : {};
+  const profileTabStyle =
+    highlight === "Profile" ? { backgroundColor: "lightgrey" } : {};
   return (
     <div className="menu">
       <ul>
@@ -37,6 +39,16 @@ const NavigationBar = ({ appModel, setCurrentPage }) => {
           }}
         >
           Tags
+        </li>
+        <li
+          id="profileTab"
+          style={profileTabStyle}
+          onClick={() => {
+            setHightlight("Profile");
+            setCurrentPage("Profile");
+          }}
+        >
+          Profile
         </li>
       </ul>
     </div>

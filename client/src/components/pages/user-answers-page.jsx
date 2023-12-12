@@ -1,12 +1,13 @@
+import axios from "axios";
+import React, { useEffect, useState, useContext } from "react";
+import { UserContext } from "../../contexts/user-context";  
+
 import "../../stylesheets/index.css";
 import {
   QuestionMetaData,
   getQuestionMetaData,
 } from "../../utils/metadata_generators";
 import { Button } from "@mui/material";
-import axios from "axios";
-import { useContext, useState } from "react";
-import { UserContext } from "../../contexts/user-context";
 /**
  * Represents a JSX element for a tag item.
  *
@@ -28,7 +29,7 @@ function tagsListItem(tag) {
  * @param {Object} question - The question object that represents the question to be displayed.
  * @returns {JSX.Element} The rendered JSX code for the ResultListItem component.
  */
-const ResultListItem = ({ question, setCurrentPage, setCurrentQuestion }) => {
+const ResultListItem = ({ question, setShowModifyAnswerScreen, setCurrentQuestion }) => {
   const [user, setUser] = useContext(UserContext);
   const [votes, setVotes] = useState(question.votes.length);
   const handleUpvote = async () => {
@@ -83,7 +84,7 @@ const ResultListItem = ({ question, setCurrentPage, setCurrentQuestion }) => {
           className="question-title"
           onClick={() => {
             setCurrentQuestion(question);
-            setCurrentPage("Answers");
+            setShowModifyAnswerScreen(true);
           }}
         >
           {question.title}
@@ -108,4 +109,73 @@ const ResultListItem = ({ question, setCurrentPage, setCurrentQuestion }) => {
   );
 };
 
-export default ResultListItem;
+const UserAnswersPage = ({ setShowModifyAnswerScreen, setQuestion , showModifyAnswerScreen }) => {
+    const [answers, setAnswers] = useState([]);
+    const [user, setUser] = useContext(UserContext);
+    const fetchAnswers = async () => {
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: `http://localhost:8000/api/answers_v2?user_id=${user.user._id}`,
+        headers: {},
+      };
+
+      await axios
+        .request(config)
+        .then((response) => {
+          const filteredAnswers = response.data.filter(answer => answer.ans_by === user.user._id);
+          setAnswers(filteredAnswers);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  
+    useEffect(() => {
+      fetchAnswers();
+  
+      const interval = setInterval(() => {
+        fetchAnswers();
+      }, 1000);
+  
+      return () => {
+        clearInterval(interval);
+      };
+    }, []);
+  
+    return (
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div
+          style={{
+            border: "solid",
+            borderTop: "none",
+            borderLeft: "none",
+            borderRight: "none",
+          }}
+        >
+          <h1>Answered Questions</h1>
+        </div>
+        {answers.map((question) => (
+          <div
+            style={{
+              border: "dotted",
+              borderTop: "none",
+              borderLeft: "none",
+              borderRight: "none",
+            }}
+          >
+            <h3
+              onClick={() => {
+                setQuestion(question);
+                setShowModifyAnswerScreen(true);
+              }}
+            >
+            <ResultListItem question={question} setCurrentQuestion={setQuestion} setShowModifyAnswerScreen={setShowModifyAnswerScreen} />
+            </h3>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+export default UserAnswersPage;
