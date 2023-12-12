@@ -73,6 +73,7 @@ users.post("/logout", async (req, res) => {
 // Get users from database if admin.
 users.get("/", async (req, res) => {
   try {
+    // If user is not admin, return error
     if (req.session.user?.admin !== true) {
       res.status(401).json({ error: "Unauthorized" });
       return;
@@ -97,6 +98,8 @@ users.delete("/", async (req, res) => {
       res.status(401).json({ error: "Unauthorized" });
       return;
     }
+    const deletedQuestions = await Questions.deleteMany({ asked_by: req.body.id });
+    const deletedAnswers = await Answers.deleteMany({ answered_by: req.body.id });
     const deleted = await Users.deleteOne({ _id: req.body.id });
     res.status(200).json(deleted);
   } catch (error){

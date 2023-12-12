@@ -61,7 +61,7 @@ answersRouter2.get("/", async (req, res) => {
       }).populate("tags");
       const filteredQuestionWithAnswers = questionWithAnswers.filter(question => {
         return question.answers.some(answer => {
-          return answer.ans_by._id.toString() === req.query.user_id;
+          return answer.ans_by._id == req.query.user_id;
         })
       });
       res.status(200).json(filteredQuestionWithAnswers);

@@ -119,11 +119,11 @@ const UserAnswersPage = ({ setShowModifyAnswerScreen, setQuestion , showModifyAn
         url: `http://localhost:8000/api/answers_v2?user_id=${user.user._id}`,
         headers: {},
       };
-  
+
       await axios
         .request(config)
         .then((response) => {
-          const filteredAnswers = response.data.filter(answer => answer.ans_by === user._id);
+          const filteredAnswers = response.data.filter(answer => answer.ans_by === user.user._id);
           setAnswers(filteredAnswers);
         })
         .catch((error) => {

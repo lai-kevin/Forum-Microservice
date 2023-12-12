@@ -44,7 +44,7 @@ const UserQuestions = ({
       .request(config)
       .then((response) => {
         const filteredQuestions = response.data.filter(
-          (question) => question.posted_by === user._id
+          (question) => question.posted_by === user.user._id
         );
         setQuestions(filteredQuestions);
       })
@@ -100,6 +100,53 @@ const UserQuestions = ({
   );
 };
 
+const AdminUsersList = ({ setDisplay }) => {
+  const [user, setUser] = useContext(UserContext);
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: "http://localhost:8000/api/users",
+      headers: {},
+      withCredentials: true,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        setUsers(response.data);
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  return (
+    <div>
+      <h1>Users</h1>
+      <Divider style={{ backgroundColor: "black", height: "3px" }} />
+      {users.map((normal_user) => (
+        <div>
+          <h3
+            onClick={() => {
+              const userCopy = user;
+              userCopy.adminUser = user.user
+              userCopy.user = normal_user;
+              setUser(userCopy);
+              setDisplay("questions");
+            }}
+          >
+            {normal_user.username}
+          </h3>
+          <Button onClick={() => handleDeleteUser(normal_user)}>Delete User</Button>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const Profile = ({ setCurrentPage }) => {
   const [user, setUser] = useContext(UserContext);
   const [display, setDisplay] = useState("questions");
@@ -109,6 +156,7 @@ const Profile = ({ setCurrentPage }) => {
   const [tag, setTag] = useState(null);
   const [question, setQuestion] = useState(null);
   const [answer, setAnswer] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const UserTags = () => {
     return (
@@ -160,21 +208,32 @@ const Profile = ({ setCurrentPage }) => {
       list = <UserQuestions user={user} />;
       break;
   }
-
   let profilePageComponent = (
     <div style={{ justifyContent: "center", textAlign: "center" }}>
       <h1>Profile</h1>
       {user ? (
         <div>
           <div>
-            <UserInfo user={user.user} />
+            {(!user.user.admin && !user.adminUser) ? (
+              <UserInfo user={user.user} />
+            ) : (
+              <UserInfo user={user.adminUser ? user.adminUser : user.user} />
+            )}
           </div>
-          <div>
-            <Button onClick={() => setDisplay("questions")}>Questions</Button>
-            <Button onClick={() => setDisplay("answers")}>Answers</Button>
-            <Button onClick={() => setDisplay("tags")}>Tags</Button>
-          </div>
-          {list}
+          {(!user.user.admin) ? (
+            <div>
+              <div>
+                <Button onClick={() => setDisplay("questions")}>
+                  Questions
+                </Button>
+                <Button onClick={() => setDisplay("answers")}>Answers</Button>
+                <Button onClick={() => setDisplay("tags")}>Tags</Button>
+              </div>
+              {list}
+            </div>
+          ) : (
+            <AdminUsersList setDisplay={setDisplay}/>
+          )}
         </div>
       ) : (
         <h1>Not logged in</h1>
