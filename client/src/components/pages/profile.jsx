@@ -103,6 +103,24 @@ const UserQuestions = ({
 const AdminUsersList = ({ setDisplay }) => {
   const [user, setUser] = useContext(UserContext);
   const [users, setUsers] = useState([]);
+
+  const handleDeleteUser = (user) => {
+    let config = {
+      method: 'delete',
+      maxBodyLength: Infinity,
+      url: 'http://localhost:8000/api/users',
+      headers: { },
+      withCredentials: true,
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
   useEffect(() => {
     let config = {
       method: "get",
