@@ -29,7 +29,7 @@ docker run -e MONGODB_URI=<your_mongodb_uri> -p 8080:3000 your-docker-username/f
    docker run -e MONGODB_URI=<your_mongodb_uri> -p 8080:3000 your-docker-username/forum-microservice
 
 3. **Initialize Database and Admin:**
-    A template for initializing the initial data in the database
+    Adjust this template as needed
    ```javascript
         // Setup database with initial test data.
         // Include an admin user.
