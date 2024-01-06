@@ -1,9 +1,9 @@
-const tagsRouter2 = require("express").Router();
+const tagsRouter = require("express").Router();
 const Tag = require("../models/tags");
 const Question = require("../models/questions");
 
 // Create an tag and store in database
-tagsRouter2.post("/", async (req, res) => {
+tagsRouter.post("/", async (req, res) => {
   // Check if user is logged in
   if (!req.session.user) {
     res.status(400).json({ error: "Not logged in" });
@@ -24,7 +24,7 @@ tagsRouter2.post("/", async (req, res) => {
 });
 
 // Get tag(s) database.
-tagsRouter2.get("/", async (req, res) => {
+tagsRouter.get("/", async (req, res) => {
   try {
     let response = {};
 
@@ -42,7 +42,7 @@ tagsRouter2.get("/", async (req, res) => {
 });
 
 // Update a tag
-tagsRouter2.patch("/", async (req, res) => {
+tagsRouter.patch("/", async (req, res) => {
   // Check if user is logged in
   if (!req.session.user) {
     res.status(400).json({ error: "Not logged in" });
@@ -66,7 +66,7 @@ tagsRouter2.patch("/", async (req, res) => {
 });
 
 // Delete a tag
-tagsRouter2.delete("/", async (req, res) => {
+tagsRouter.delete("/", async (req, res) => {
   // Check if user is logged in
   if (!req.session.user) {
     res.status(400).json({ error: "Not logged in" });
@@ -99,4 +99,4 @@ tagsRouter2.delete("/", async (req, res) => {
 });
 
 
-module.exports = tagsRouter2;
+module.exports = tagsRouter;

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -19,7 +20,7 @@ app.use(
     cookie: {},
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/fake_so'})
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI })
   })
 )
 
@@ -37,11 +38,12 @@ app.use("/api/comments", commentsRouter);
 app.use(middleware.unknownEndpoint);
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/fake_so")
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("Connected to MongoDB");
   })
   .catch((error) => {
+    console.log(error)
     console.log("failed to connect to database");
   });
 
