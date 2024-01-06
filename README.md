@@ -2,7 +2,7 @@
 
 ## Overview
 
-Forum-Microservice is designed to provide a scalable and containerized environment for deploying a microservice-based application resembling a Reddit-style forum. The docker image is available on [DockerHub] (https://hub.docker.com/r/kevinlaisoftware/forum) This image encapsulates the Node.js application responsible for handling forum-related functionalities, with seamless integration capabilities for MongoDB.
+Forum-Microservice is designed to provide a scalable and containerized environment for deploying a microservice-based application resembling a Reddit-style forum. The docker image is available on [DockerHub](https://hub.docker.com/r/kevinlaisoftware/forum). This image encapsulates the Node.js application responsible for handling forum-related functionalities, with seamless integration capabilities for MongoDB.
 
 ## Features
 
