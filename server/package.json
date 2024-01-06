@@ -11,8 +11,10 @@
   "dependencies": {
     "axios": "^1.6.2",
     "bcrypt": "*",
+    "connect-mongo": "^5.1.0",
     "cors": "^2.8.5",
     "express": "*",
+    "express-session": "^1.17.3",
     "mongoose": "*",
     "mongoose-paginate-v2": "^1.7.4",
     "mysql": "*",
