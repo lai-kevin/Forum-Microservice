@@ -23,14 +23,14 @@ app.use(
   })
 )
 
-const questionsRouter2 = require("./controllers/questions_v2");
-const answersRouter2 = require("./controllers/answers_v2");
-const tagsRouter2 = require("./controllers/tags_v2");
+const questionsRouter = require("./controllers/questions");
+const answersRouter = require("./controllers/answers");
+const tagsRouter = require("./controllers/tags");
 const usersRouter = require("./controllers/users");
 const commentsRouter = require("./controllers/comments");
-app.use("/api/questions_v2", questionsRouter2);
-app.use("/api/answers_v2", answersRouter2);
-app.use("/api/tags_v2", tagsRouter2);
+app.use("/api/questions", questionsRouter);
+app.use("/api/answers", answersRouter);
+app.use("/api/tags", tagsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/comments", commentsRouter);
 
