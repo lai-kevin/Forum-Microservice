@@ -1,4 +1,4 @@
-# Forum-Microservice Docker Image
+# Forum-Microservice
 
 ## Overview
 
