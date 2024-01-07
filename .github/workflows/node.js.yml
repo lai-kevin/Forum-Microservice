@@ -35,3 +35,7 @@ jobs:
 
     - name: Start server in the background
       run: node server.js
+    
+    - name: Terminate server
+      run: |
+        pkill node
