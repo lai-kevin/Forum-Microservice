@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      MY_REPO_SECRET: ${{ secrets.MONGODB_URI }}
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
 
     strategy:
       matrix:
