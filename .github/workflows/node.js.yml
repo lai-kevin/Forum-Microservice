@@ -14,6 +14,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      MY_REPO_SECRET: ${{ secrets.MONGODB_URI }}
+
     strategy:
       matrix:
         node-version: [14.x, 16.x, 18.x]
