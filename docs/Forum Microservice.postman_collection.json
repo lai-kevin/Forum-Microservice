@@ -1,0 +1,823 @@
+{
+	"info": {
+		"_postman_id": "49e981cf-b5e2-4f0b-9434-27e7a6a41730",
+		"name": "Forum Microservice",
+		"description": "This API Documentation is for a running instance of a Forum Microservice from [https://github.com/lai-kevin/Forum-Microservice.](https://github.com/lai-kevin/Forum-Microservice.) Follow the instructions in the ReadMe of Forum-Microservice to configure the Forum Microservice.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31420187",
+		"_collection_link": "https://red-satellite-955561.postman.co/workspace/586a4cfa-3e4c-40aa-9c1e-d5535acc20fb/collection/30898740-49e981cf-b5e2-4f0b-9434-27e7a6a41730?action=share&source=collection_link&creator=31420187"
+	},
+	"item": [
+		{
+			"name": "Questions",
+			"item": [
+				{
+					"name": "Create Question",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"I like coding2\",\r\n    \"summary\": \"coding is fun\",\r\n    \"question_text\": \"I like cars\",\r\n    \"tag_strings\": [\"kevin\", \"bob\", \"Lara\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain_name}}/api/questions",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"questions"
+							],
+							"query": [
+								{
+									"key": "question_id",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Questions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/questions",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"questions"
+							],
+							"query": [
+								{
+									"key": "question_id",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "tag",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Question",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/questions_v2?question_id",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"questions_v2"
+							],
+							"query": [
+								{
+									"key": "question_id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Question",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"question_id\": \"\",\r\n    \"title\": \"\",\r\n    \"summary\": \"\",\r\n    \"question_text\": \"\",\r\n    \"tag_strings\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain_name}}/api/questions",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"questions"
+							],
+							"query": [
+								{
+									"key": "question_id",
+									"value": "",
+									"description": "Required",
+									"disabled": true
+								},
+								{
+									"key": "title",
+									"value": null,
+									"description": "Required",
+									"disabled": true
+								},
+								{
+									"key": "text",
+									"value": null,
+									"description": "Required",
+									"disabled": true
+								},
+								{
+									"key": "tags",
+									"value": null,
+									"description": "Required",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Increment View",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/questions/view?question_id=65701f3139d013d8722e7529",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"questions",
+								"view"
+							],
+							"query": [
+								{
+									"key": "question_id",
+									"value": "65701f3139d013d8722e7529",
+									"description": "Required"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upvote",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/questions/upvote/?question_id",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"questions",
+								"upvote",
+								""
+							],
+							"query": [
+								{
+									"key": "question_id",
+									"value": null,
+									"description": "Required"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Downvote",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/questions/upvote/?question_id",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"questions",
+								"upvote",
+								""
+							],
+							"query": [
+								{
+									"key": "question_id",
+									"value": null,
+									"description": "Required"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Creating a new question creates a new thread with answers, comments, and tags. The view, upvote, and downvote, counters must be incremented whenever for appropriate actions. Incrementing counters requires a user to be logged in."
+		},
+		{
+			"name": "Answers",
+			"item": [
+				{
+					"name": "Create Answer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"question_id\": \"65701f3139d013d8722e7529\",\r\n    \"text\": \"answer6\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain_name}}/api/answers_v2",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"answers_v2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Answers of Question",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/answers_v2?question_id=6573c2bbed98aec5d8d010a4&user_id",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"answers_v2"
+							],
+							"query": [
+								{
+									"key": "question_id",
+									"value": "6573c2bbed98aec5d8d010a4"
+								},
+								{
+									"key": "user_id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Answer",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/answers_v2",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"answers_v2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Answer",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/answers_v2?answer_id",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"answers_v2"
+							],
+							"query": [
+								{
+									"key": "answer_id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Increment View",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/answers_v2/view?answer_id",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"answers_v2",
+								"view"
+							],
+							"query": [
+								{
+									"key": "answer_id",
+									"value": null,
+									"description": "required"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upvote",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/answers_v2/upvote?answer_id",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"answers_v2",
+								"upvote"
+							],
+							"query": [
+								{
+									"key": "answer_id",
+									"value": null,
+									"description": "Required"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Downvote",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/answers_v2/downvote?answer_id",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"answers_v2",
+								"downvote"
+							],
+							"query": [
+								{
+									"key": "answer_id",
+									"value": null,
+									"description": "Required"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Like a question, answers can have comments and tags . The view, upvote, and downvote, counters must be incremented whenever for appropriate actions. Incrementing counters requires a user to be logged in."
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"kevin.lai.1@stonybrook.edu\",\r\n    \"password\": \"qwerty\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain_name}}/api/users/login",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/users",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "file",
+							"file": {}
+						},
+						"url": {
+							"raw": "{{domain_name}}/api/users?id",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "required"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"kevin.lai.1@stonybrook.edu\",\r\n    \"password\": \"qwerty\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain_name}}/api/users/register",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/users/logout",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Users can must login to be able to modify questions, answers, and comments. A user can be registered with the Register User endpoint. User information can be fetched from admins and regular users via the User Info endpoint."
+		},
+		{
+			"name": "Tags",
+			"item": [
+				{
+					"name": "Create Tag",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"tag5\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain_name}}/api/tags_v2",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"tags_v2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/tags_v2?tag_name=tag3",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"tags_v2"
+							],
+							"query": [
+								{
+									"key": "tag_name",
+									"value": "tag3",
+									"description": "optional."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Tag",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tag_id\": \"\",\r\n    \"name\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain_name}}/api/tags_v2",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"tags_v2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tag",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/tags_v2?tag_id=",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"tags_v2"
+							],
+							"query": [
+								{
+									"key": "tag_id",
+									"value": "",
+									"description": "Required"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "A tag is used for categorizing questions. If a tag does not exist when posting a question, the respective tag is automatically created. A tag can be manually created with the Create tag endpoint."
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "Post Comment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"answer_id\": \"\",\r\n    \"text\": \"I like sushi\",\r\n    \"question_id\": \"6573c2bbed98aec5d8d010a4\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain_name}}/api/comments",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Comment",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "comment_id",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "text",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain_name}}/api/comment",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/comment?comment_id&answer_id&question_id",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"comment"
+							],
+							"query": [
+								{
+									"key": "comment_id",
+									"value": null
+								},
+								{
+									"key": "answer_id",
+									"value": null
+								},
+								{
+									"key": "question_id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Question Comments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/comments?question_id=6573c2bbed98aec5d8d010a4",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"comments"
+							],
+							"query": [
+								{
+									"key": "question_id",
+									"value": "6573c2bbed98aec5d8d010a4",
+									"description": "Required if getting comments of question."
+								},
+								{
+									"key": "answer_id",
+									"value": "",
+									"description": "Required if getting commnets of question",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upvote",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{domain_name}}/api/comments/upvote?comment_id",
+							"host": [
+								"{{domain_name}}"
+							],
+							"path": [
+								"api",
+								"comments",
+								"upvote"
+							],
+							"query": [
+								{
+									"key": "comment_id",
+									"value": null,
+									"description": "Required"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Questions and answers can have comments. To post a comment use the Post Comment endpoint and include the ID, of the question or answer along with the text of the comment in the JSON body."
+		}
+	]
+}
