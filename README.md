@@ -29,7 +29,7 @@ docker run -e MONGODB_URI=<your_mongodb_uri> -p 8080:3000 your-docker-username/f
    docker run -e MONGODB_URI=<your_mongodb_uri> -p 8080:3000 your-docker-username/forum-microservice
 
 3. **Initialize Database and Admin:**
-    Adjust this template as needed
+    Adjust this template as needed to create an admin user
    ```javascript
         // Setup database with initial test data.
         // Include an admin user.
@@ -46,7 +46,7 @@ docker run -e MONGODB_URI=<your_mongodb_uri> -p 8080:3000 your-docker-username/f
         const admin_password = process.argv[3];
         const admin_username = process.argv[4];
 
-        const saltRounds = 50;
+        const saltRounds = 12;  // Default salt rounds 12
         const salt = bcrypt.genSaltSync(saltRounds);
         const admin_passwordHash = bcrypt.hashSync(admin_password, salt);
 
