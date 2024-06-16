@@ -12,6 +12,9 @@ Forum-Microservice is designed to provide a scalable and containerized environme
   
 - **MongoDB Integration:** Supports dynamic connection to a MongoDB instance through the `MONGODB_URI` environment variable.
 
+## Postman Documentation
+The API documentation can be found [here](https://documenter.getpostman.com/view/30898740/2sA3XQiNWS).
+
 ## Usage
 
 To run the Docker container, set the required environment variables and port bindings:
