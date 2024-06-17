@@ -4,6 +4,16 @@
 
 Forum-Microservice is designed to provide a scalable and containerized environment for deploying a microservice-based application resembling a Reddit-style forum. The docker image is available on [DockerHub](https://hub.docker.com/r/kevinlaisoftware/forum). This image encapsulates the Node.js application responsible for handling forum-related functionalities, with seamless integration capabilities for MongoDB.
 
+## Technologies Used:
+- JavaScript
+- Express.js
+- Node.js
+- MongoDB
+- Docker
+- Github Actions
+- Jest
+- Bcrypt
+- Postman
 ## Features
 
 - **Users:** The Forum-Microservice supports user management and authentication. Users can register, log in, and perform various actions such as creating posts, commenting, and voting on posts. The microservice provides APIs for user-related operations, allowing developers to integrate user functionality into their applications easily.
